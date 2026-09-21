@@ -19,6 +19,7 @@ export const config = {
 
 export const wa = () => `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(config.whatsappMessage)}`;
 export const mail = () => `mailto:${config.managementEmail}?subject=${encodeURIComponent("Project enquiry for IMPCO Agency")}&body=${encodeURIComponent("Hello IMPCO Agency,\n\nI would like to discuss a project.")}`;
+export const gmail = () => `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(config.managementEmail)}&su=${encodeURIComponent("Project enquiry for IMPCO Agency")}&body=${encodeURIComponent("Hello IMPCO Agency,\n\nI would like to discuss a project.")}`;
 
 export const A = "/assets/";
 export const images = {
