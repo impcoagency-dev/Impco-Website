@@ -18,7 +18,7 @@ export const config = {
 };
 
 export const wa = () => `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(config.whatsappMessage)}`;
-export const mail = () => `mailto:${config.managementEmail}`;
+export const mail = () => `mailto:${config.managementEmail}?subject=${encodeURIComponent("Project enquiry for IMPCO Agency")}&body=${encodeURIComponent("Hello IMPCO Agency,\n\nI would like to discuss a project.")}`;
 
 export const A = "/assets/";
 export const images = {
@@ -39,12 +39,7 @@ export const images = {
     { id: "abstract-motion", title: "Motion & Abstract 3D", images: ["abstract.png", "abstract 01.png", "abstract 02.png", "abstract 03.png"] },
     { id: "character-design", title: "3D Character Design", images: ["5972075016780629491 (3).jpg", "Character 05.jpg", "Character 04.jpg", "Character 03.jpg", "Character 02.jpg"] },
     { id: "interior-architecture", title: "Interior / Architecture", images: ["Interior 01.jpg", "Interior 02.jpg", "Interior 03.jpg", "Interior 04.jpg", "Interior 05.jpg"] },
-    { id: "environment-design", title: "Environment Design", images: ["Game Environment.jpg", "Environment 02.png", "Environment 03.jpg", "Environment 05.jpg"] },
-    { id: "character-rigging", title: "Character Rigging", images: ["091c899264a7cbb635529e5827ba3da92de0d6e3.jpg", "27f8f0dd6eda2db3071762bdf995884fc8ac3434.jpg", "Character 01.jpg", "Character 02.jpg"] },
-    { id: "game-design", title: "Game Design", images: ["Game Environment.jpg", "Environment 02.png", "Environment 03.jpg", "Environment 05.jpg"] },
-    { id: "motion-graphics", title: "Motion Graphics", images: ["abstract.png", "abstract 01.png", "abstract 02.png", "abstract 03.png"] },
-    { id: "vfx", title: "VFX", images: ["2b2b7b13b3b8dd92f997bc35d9f8e3dc55f29533.png", "abstract 01.png", "abstract 02.png"] },
-    { id: "3d-floor-plan", title: "3D Floor Plan", images: ["Interior 01.jpg", "Interior 02.jpg", "Interior 03.jpg", "Exterior 03.png"] }
+    { id: "environment-design", title: "Environment Design", images: ["Game Environment.jpg", "Environment 02.png", "Environment 03.jpg", "Environment 05.jpg"] }
   ],
   aiProjects: [
     ["b456efd8b1491faa3cc5a6e3440f0c474ad27a1e.jpg", "AI Control Pro"],
