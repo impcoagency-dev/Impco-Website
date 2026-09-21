@@ -1,7 +1,7 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
 import {BrowserRouter,useLocation,useNavigate,Link} from "react-router-dom";
-import {ArrowRight,ArrowUpRight,Instagram,Linkedin,Youtube,Menu,X} from "lucide-react";
+import {ArrowRight,ArrowUpRight,Instagram,Linkedin,Youtube,Menu,X,ChevronLeft,ChevronRight} from "lucide-react";
 import {config,images,A,wa,mail} from "./config";
 import "./styles.css";
 
@@ -52,8 +52,37 @@ function Home(){
  </main><Footer/></>
 }
 
+function PortfolioViewer({project,index,onClose,onChange}){
+ const touchStart=React.useRef(null);
+ const gallery=project.images.slice(0,5);
+ const total=gallery.length;
+ const change=(offset)=>onChange((index+offset+total)%total);
+ React.useEffect(()=>{
+  const onKeyDown=(event)=>{
+   if(event.key==="Escape")onClose();
+   if(event.key==="ArrowLeft")change(-1);
+   if(event.key==="ArrowRight")change(1);
+  };
+  document.addEventListener("keydown",onKeyDown);
+  const previousOverflow=document.body.style.overflow;
+  document.body.style.overflow="hidden";
+  return()=>{document.removeEventListener("keydown",onKeyDown);document.body.style.overflow=previousOverflow;};
+ },[index,total,onClose]);
+ return <div className="portfolio-viewer" role="dialog" aria-modal="true" aria-label={`${project.title} image viewer`} onClick={onClose}>
+  <div className="viewer-panel" onClick={(event)=>event.stopPropagation()} onTouchStart={(event)=>{touchStart.current=event.changedTouches[0].clientX;}} onTouchEnd={(event)=>{const distance=event.changedTouches[0].clientX-touchStart.current;if(Math.abs(distance)>45)change(distance>0?-1:1);}}>
+   <button className="viewer-close" type="button" onClick={onClose} aria-label="Close image viewer"><X/></button>
+   <div className="viewer-heading"><span>3D / {project.id}</span><h2>{project.title}</h2></div>
+  <div className="viewer-image-wrap"><img src={A+gallery[index]} alt={`${project.title}, image ${index+1} of ${total}`}/></div>
+   {total>1&&<><button className="viewer-nav viewer-prev" type="button" onClick={()=>change(-1)} aria-label="Previous image"><ChevronLeft/></button><button className="viewer-nav viewer-next" type="button" onClick={()=>change(1)} aria-label="Next image"><ChevronRight/></button></>}
+  <div className="viewer-footer"><span>{index+1} / {total}</span>{total>1&&<div className="viewer-dots" aria-label="Choose image">{gallery.map((image,imageIndex)=><button key={`${image}-${imageIndex}`} className={imageIndex===index?"active":""} type="button" onClick={()=>onChange(imageIndex)} aria-label={`Show image ${imageIndex+1}`}/>)}</div>}<span>ESC TO CLOSE</span></div>
+  </div>
+ </div>;
+}
+
 function ThreeD(){
- return <><main className="portfolio-page threeD-page"><section className="page-head wrap"><Label>IMPCO / 3D</Label><h1>3D</h1><p>A collection of 3D experiences, visuals and environments we've created.</p><div className="tabs">{["ALL","CONCEPTS","PRODUCTS","ARCHITECTURE","ENVIRONMENTS","CHARACTERS","OTHER"].map((x,i)=><button className={i===0?"sel":""} key={x}>{x}</button>)}</div></section><section className="threeD-list wrap">{images.threeD.map(([im,t])=><article key={t}><img src={A+im}/><div><span>3D</span><h3>{t}</h3><ArrowUpRight/></div></article>)}</section></main><Footer/></>
+ const [viewer,setViewer]=React.useState(null);
+ const open=(project)=>setViewer({project,index:0});
+ return <><main className="portfolio-page threeD-page"><section className="page-head wrap"><Label>IMPCO / 3D</Label><h1>3D</h1><p>A collection of 3D experiences, visuals and environments we've created.</p><div className="tabs">{["ALL","CONCEPTS","PRODUCTS","ARCHITECTURE","ENVIRONMENTS","CHARACTERS","OTHER"].map((x,i)=><button className={i===0?"sel":""} key={x}>{x}</button>)}</div></section><section className="threeD-list wrap">{images.threeD.map((project)=><button className="threeD-item" type="button" key={project.id} onClick={()=>open(project)} aria-label={`Open ${project.title} gallery`}><img src={A+project.images[0]} alt={project.title} loading="lazy"/><span className="threeD-caption"><span>3D</span><strong>{project.title}</strong><ArrowUpRight/></span></button>)}</section></main><Footer/>{viewer&&<PortfolioViewer project={viewer.project} index={viewer.index} onClose={()=>setViewer(null)} onChange={(index)=>setViewer({...viewer,index})}/>}</>;
 }
 
 function AI(){

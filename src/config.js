@@ -23,29 +23,30 @@ export const mail = () => `mailto:${config.managementEmail}`;
 
 export const A = "/assets/";
 export const images = {
-  homeHero: "34101ac632ef2b8b4963fd4391bc2e8d2c5f80d6.jpg",
+  homeHero: "For Home.png",
   homeFeature: "34101ac632ef2b8b4963fd4391bc2e8d2c5f80d6.jpg",
   homeProjects: [
-    ["091c899264a7cbb635529e5827ba3da92de0d6e3.jpg","3D Designs & Animations","3D"],
+    ["Character 01.jpg","3D Designs & Animations","3D"],
     ["091c899264a7cbb635529e5827ba3da92de0d6e3.jpg","AI Customer Platform","AI"],
     ["a3b4a77df7cdb0c25797e83eedcea6854fdc83f1.jpg","E-Commerce Experience","WEB"],
     ["9890e0e67b2a477dc4fdb85197bce734a7cb13b9.jpg","Brand Identity System","BRANDING"],
     ["4239dd6f380c4a9e9d2580b5b1f8d998d01b0650.jpg","Architectural Visualization","3D"],
     ["fa63fc91bf2974039267efd46abb11c5369ae726.jpg","Interactive Web App","WEB"]
   ],
+  // Add, remove, replace or reorder up to 5 paths inside a project's images array.
   threeD: [
-    ["be935885ef5048645d5e08deea5e5c387274c86c.jpg","3D Design — Product Visualization"],
-    ["d7edf2c6292a171e740dfaf3269636a3d97161e0.jpg","Luxury Product Visualization"],
-    ["ed8170fa6d8b724b89c53c5a583abd2dfbf5dd48.jpg","Architectural Visualization"],
-    ["786be98699c61269dacc750eb68a2986696eb188.jpg","Motion & Abstract 3D"],
-    ["ae2828f35804bcc9c2c4144e886e3cd46ad15fb5.jpg","3D Character / Product"],
-    ["27f8f0dd6eda2db3071762bdf995884fc8ac3434.jpg","3D Character Detail"],
-    ["d62f5fb308a5e035a96935aa800c762561f77069.jpg","Interior Visualization"],
-    ["540bb8b0eb8b51687c4610dbeba1e9bb0bd8282a.jpg","Luxury Product Render"],
-    ["a9e95c6362ea44d30e0e8c4907aa337725c767d9.jpg","Abstract 3D Motion"],
-    ["2836da313f34dbb5098d70ec7bbde294c0dce865.jpg","Interior / Architecture"],
-    ["9b1d88418ed768c46204c3a5a39cd6694caac460.jpg","Environment Design"],
-    ["3354db023b733d46b651607784f93c54be9617ac.jpg","Interior Lighting"]
+    {id: "product-visualization", title: "3D Design — Product Visualization", images: ["Bag frontview.png", "Bag backview.png", "Bag Explode.png", "Bag conceptview.png"]},
+    {id: "luxury-product", title: "Luxury Product Visualization", images: ["perfume frontview.png", "perfume backview.png", "perfume boxview.png", "perfume explode view.png", "perfume conceptview.png"]},
+    {id: "architectural-visualization", title: "Architectural Visualization", images: ["Exterior 03.png", "Exterior 01.png", "Exterior 04.jpg", "Exterior 05.jpg", "Exterior 06.jpg"]},
+    {id: "abstract-motion", title: "Motion & Abstract 3D", images: ["786be98699c61269dacc750eb68a2986696eb188.jpg", "abstract.png", "abstract 01.png", "abstract 02.png", "abstract 03.png"]},
+    {id: "character-design", title: "3D Character Design", images: ["5972075016780629491 (3).jpg", "Character 05.jpg", "Character 04.jpg", "Character 03.jpg", "Character 02.jpg"]},
+    {id: "character-detail", title: "3D Character Detail", images: ["27f8f0dd6eda2db3071762bdf995884fc8ac3434.jpg", "ae2828f35804bcc9c2c4144e886e3cd46ad15fb5.jpg", "786be98699c61269dacc750eb68a2986696eb188.jpg", "a9e95c6362ea44d30e0e8c4907aa337725c767d9.jpg", "be935885ef5048645d5e08deea5e5c387274c86c.jpg"]},
+    {id: "interior-visualization", title: "Interior Visualization", images: ["d62f5fb308a5e035a96935aa800c762561f77069.jpg", "2836da313f34dbb5098d70ec7bbde294c0dce865.jpg", "3345db023b733d46b651607784f93c54be9617ac.jpg", "ed8170fa6d8b724b89c53c5a583abd2dfbf5dd48.jpg", "9b1d88418ed768c46204c3a5a39cd6694caac460.jpg"]},
+    {id: "character-rigging", title: "Character Rigging", images: ["540bb8b0eb8b51687c4610dbeba1e9bb0bd8282a.jpg", "be935885ef5048645d5e08deea5e5c387274c86c.jpg", "d7edf2c6292a171e740dfaf3269636a3d97161e0.jpg", "a9e95c6362ea44d30e0e8c4907aa337725c767d9.jpg", "786be98699c61269dacc750eb68a2986696eb188.jpg"]},
+    {id: "abstract-render", title: "Abstract 3D Motion", images: ["a9e95c6362ea44d30e0e8c4907aa337725c767d9.jpg", "786be98699c61269dacc750eb68a2986696eb188.jpg", "540bb8b0eb8b51687c4610dbeba1e9bb0bd8282a.jpg", "27f8f0dd6eda2db3071762bdf995884fc8ac3434.jpg", "ae2828f35804bcc9c2c4144e886e3cd46ad15fb5.jpg"]},
+    {id: "interior-architecture", title: "Interior / Architecture", images: ["Interior 01.jpg", "Interior 02.jpg", "Interior 03.jpg", "Interior 04.jpg", "Interior 05.jpg"]},
+    {id: "environment-design", title: "Environment Design", images: ["Game Environment.jpg", "Environment 02.png", "Environment 03.jpg", "Environment 05.jpg", "Game Environment.jpg"]},
+    {id: "interior-lighting", title: "Interior Lighting", images: ["3345db023b733d46b651607784f93c54be9617ac.jpg", "d62f5fb308a5e035a96935aa800c762561f77069.jpg", "2836da313f34dbb5098d70ec7bbde294c0dce865.jpg", "9b1d88418ed768c46204c3a5a39cd6694caac460.jpg", "ed8170fa6d8b724b89c53c5a583abd2dfbf5dd48.jpg"]}
   ],
   aiProjects: [
     ["b456efd8b1491faa3cc5a6e3440f0c474ad27a1e.jpg","AI Control Pro"],
