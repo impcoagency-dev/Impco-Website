@@ -10,7 +10,7 @@
 ## Easy editing
 Open `src/config.js`. This is the main settings file.
 
-- Company email: `hello@impcoagency.com`
+- Company email: `contact@impcoagency.agency`
 - WhatsApp: `447418320714`
 - Social links: LinkedIn, X, Threads, YouTube, Instagram.
 

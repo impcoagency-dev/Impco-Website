@@ -773,6 +773,7 @@ button {
   background: rgba(12, 17, 27, 0.9);
   padding: 0;
   text-align: left;
+  color: var(--text);
 }
 
 .gallery-card img {
@@ -805,6 +806,7 @@ button {
   font-size: 1.1rem;
   text-transform: uppercase;
   line-height: 1.1;
+  color: var(--text);
 }
 
 .hero-split {
@@ -1403,27 +1405,6 @@ button {
   background: #090b12;
 }
 
-.home-hero-image {
-  position: absolute;
-  inset: 0 0 0 43%;
-  overflow: hidden;
-}
-
-.home-hero-image::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, #090b12 0%, rgba(9, 11, 18, 0.92) 15%, rgba(9, 11, 18, 0.2) 72%, rgba(9, 11, 18, 0.55) 100%);
-}
-
-.home-hero-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0.82;
-}
-
 .home-hero-content {
   position: relative;
   z-index: 1;
@@ -1744,14 +1725,6 @@ button {
 }
 
 @media (max-width: 900px) {
-  .home-hero-image {
-    inset: 0;
-  }
-
-  .home-hero-image::after {
-    background: linear-gradient(90deg, rgba(9, 11, 18, 0.97), rgba(9, 11, 18, 0.58) 62%, rgba(9, 11, 18, 0.3));
-  }
-
   .home-hero h1 {
     font-size: clamp(4rem, 13vw, 7rem);
   }
@@ -1783,14 +1756,6 @@ button {
     justify-content: flex-end;
     padding-top: 5rem;
     padding-bottom: 5rem;
-  }
-
-  .home-hero-image {
-    inset: 0;
-  }
-
-  .home-hero-image img {
-    object-position: 62% center;
   }
 
   .home-hero h1 {

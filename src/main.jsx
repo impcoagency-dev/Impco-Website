@@ -159,9 +159,6 @@ function Home() {
   return (
     <main className="page-shell">
       <section className="home-hero">
-        <div className="home-hero-image">
-          <img src={A + images.homeHero} alt="Abstract IMPCO 3D artwork" />
-        </div>
         <div className="container home-hero-content">
           <div className="home-hero-kicker">IMPCO AGENCY <span>/</span> DIGITAL STUDIO</div>
           <h1>MAKE THE<br /><em>IMPOSSIBLE</em><br />VISIBLE.</h1>
@@ -301,7 +298,7 @@ function PortfolioViewer({ project, index, onClose, onChange }) {
             if (Math.abs(dx) > 45) change(dx > 0 ? -1 : 1);
           }}
         >
-          <img src={A + gallery[index]} alt={`${project.title} ${index + 1}`} />
+          <img key={gallery[index]} src={A + gallery[index]} alt={`${project.title} ${index + 1}`} />
           {total > 1 && (
             <>
               <button type="button" className="viewer-nav prev" onClick={() => change(-1)} aria-label="Previous image">
@@ -369,7 +366,7 @@ function ThreeD() {
           project={viewer.project}
           index={viewer.index}
           onClose={() => setViewer(null)}
-          onChange={(nextIndex) => setViewer({ ...viewer, index: nextIndex })}
+          onChange={(nextIndex) => setViewer((current) => ({ ...current, index: nextIndex }))}
         />
       )}
     </>
@@ -559,7 +556,7 @@ function Legal({ type }) {
           <h2>5. Data Retention and Security</h2>
           <p>We retain project and enquiry information only for as long as reasonably necessary for business, legal or operational purposes and take reasonable measures to protect it.</p>
           <h2>6. Your Rights</h2>
-          <p>Depending on applicable law, you may have rights to request access, correction or deletion of personal information, or to object to certain processing. Contact us at <a href={mail()}>hello@impcoagency.com</a>.</p>
+          <p>Depending on applicable law, you may have rights to request access, correction or deletion of personal information, or to object to certain processing. Contact us at <a href={mail()}>contact@impcoagency.agency</a>.</p>
           <h2>7. Changes</h2>
           <p>We may update this policy when our services, technology or legal obligations change. The date above will be updated when material changes are made.</p>
         </>
