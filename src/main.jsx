@@ -1,115 +1,695 @@
-import React from "react";
-import {createRoot} from "react-dom/client";
-import {BrowserRouter,useLocation,useNavigate,Link} from "react-router-dom";
-import {ArrowRight,ArrowUpRight,Instagram,Linkedin,Youtube,Menu,X,ChevronLeft,ChevronRight} from "lucide-react";
-import {config,images,A,wa,mail} from "./config";
+﻿import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X, Youtube } from "lucide-react";
+import { config, images, A, wa, mail } from "./config";
 import "./styles.css";
 
-const nav=[["HOME","/"],["3D","/3d"],["AI","/ai"],["WEB","/web"],["BRANDING","/branding"],["ABOUT","/#about"],["CONTACT",null]];
+const nav = [
+  ["HOME", "/"],
+  ["3D", "/3d"],
+  ["AI", "/ai"],
+  ["WEB", "/web"],
+  ["BRANDING", "/branding"],
+  ["ABOUT", "/#about"],
+  ["CONTACT", null]
+];
 
-function Header(){
- const [open,setOpen]=React.useState(false);
- const loc=useLocation();
- return <header className="header"><div className="nav-inner">
-   <Link className="brand" to="/" onClick={()=>setOpen(false)}>{config.brand}<small> AGENCY</small></Link>
-   <button className="hamb" onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button>
-   <nav className={open?"open":""}>{nav.map(([n,p])=>p===null?<a key={n} href={mail()} onClick={()=>setOpen(false)}>{n}</a>:<a key={n} className={(loc.pathname===p.split("#")[0]&&(!p.includes("#")||loc.hash==="#about")?"active ":"")} href={p} onClick={()=>setOpen(false)}>{n}</a>)}</nav>
-   <a className="top-btn" href={wa()} target="_blank" rel="noreferrer">START A PROJECT <ArrowRight size={13}/></a>
- </div></header>
+function Header() {
+  const [open, setOpen] = React.useState(false);
+  const location = window.location.pathname + window.location.hash;
+
+  return (
+    <header className="site-header">
+      <div className="container nav-shell">
+        <Link to="/" className="brand" onClick={() => setOpen(false)}>
+          {config.brand}
+          <small> AGENCY</small>
+        </Link>
+
+        <button
+          className="nav-toggle"
+          type="button"
+          aria-label="Toggle navigation"
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? <X size={22} /> : <Menu size={22} />}
+        </button>
+
+        <nav className={`main-nav ${open ? "open" : ""}`}>
+          {nav.map(([label, href]) => {
+            if (!href) {
+              return (
+                <a key={label} href={mail()} onClick={() => setOpen(false)}>
+                  {label}
+                </a>
+              );
+            }
+
+            const isActive =
+              href === "/"
+                ? location === "/"
+                : href === "/#about"
+                  ? location === "/#about"
+                  : location.startsWith(href);
+
+            return (
+              <a key={label} href={href} className={isActive ? "active" : ""} onClick={() => setOpen(false)}>
+                {label}
+              </a>
+            );
+          })}
+        </nav>
+
+        <a className="header-button" href={wa()} target="_blank" rel="noreferrer">
+          START A PROJECT <ArrowRight size={14} />
+        </a>
+      </div>
+    </header>
+  );
 }
 
-function Footer(){
- return <footer><div className="footer-inner">
-   <div><div className="brand foot-brand">{config.brand}<small> AGENCY</small></div><div className="muted">3D · AI · WEB · BRANDING</div><p>Premium digital experiences for forward-thinking brands and organizations worldwide.</p></div>
-   <div><b>NAVIGATION</b>{nav.slice(0,7).map(([n,p])=><Link key={n} to={p}>{n}</Link>)}</div>
-   <div><b>CONNECT</b><div className="socials">
-    <a aria-label="LinkedIn" className={!config.socials.linkedin?"unconfigured":""} href={config.socials.linkedin||"#"} target={config.socials.linkedin?"_blank":undefined} rel={config.socials.linkedin?"noreferrer":undefined}><Linkedin/></a>
-    <a aria-label="X" className={!config.socials.x?"unconfigured":""} href={config.socials.x||"#"} target={config.socials.x?"_blank":undefined} rel={config.socials.x?"noreferrer":undefined}><span className="x-icon">𝕏</span></a>
-    <a aria-label="Threads" className={!config.socials.threads?"unconfigured":""} href={config.socials.threads||"#"} target={config.socials.threads?"_blank":undefined} rel={config.socials.threads?"noreferrer":undefined}><span className="threads-icon">@</span></a>
-    <a aria-label="YouTube" className={!config.socials.youtube?"unconfigured":""} href={config.socials.youtube||"#"} target={config.socials.youtube?"_blank":undefined} rel={config.socials.youtube?"noreferrer":undefined}><Youtube/></a>
-    <a aria-label="Instagram" className={!config.socials.instagram?"unconfigured":""} href={config.socials.instagram||"#"} target={config.socials.instagram?"_blank":undefined} rel={config.socials.instagram?"noreferrer":undefined}><Instagram/></a>
-   </div><div className="whatsapp-contact"><span>WHATSAPP</span><a href={wa()} target="_blank" rel="noreferrer">+44 7418 320714</a></div><a className="small-start" href={wa()} target="_blank" rel="noreferrer">START A PROJECT <ArrowRight size={12}/></a></div>
- </div><div className="footer-bottom"><span>© {new Date().getFullYear()} IMPCO AGENCY. ALL RIGHTS RESERVED.</span><span><Link to="/privacy">PRIVACY POLICY</Link> &nbsp;&nbsp; <Link to="/terms">TERMS OF SERVICE</Link></span></div></footer>
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="container footer-grid">
+        <div>
+          <div className="brand footer-brand">
+            {config.brand}
+            <small> AGENCY</small>
+          </div>
+          <div className="muted">3D · AI · WEB · BRANDING</div>
+          <p>Premium digital experiences for ambitious brands and organizations worldwide.</p>
+        </div>
+
+        <div>
+          <h4>NAVIGATION</h4>
+          <div className="footer-links">
+            {nav.map(([label, href]) => {
+              if (!href) return null;
+              return (
+                <a key={label} href={href}>
+                  {label}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <h4>CONNECT</h4>
+          <div className="socials">
+            <a aria-label="LinkedIn" href={config.socials.linkedin || "#"} target={config.socials.linkedin ? "_blank" : undefined} rel={config.socials.linkedin ? "noreferrer" : undefined} className={!config.socials.linkedin ? "unconfigured" : ""}>
+              <Linkedin size={16} />
+            </a>
+            <a aria-label="X" href={config.socials.x || "#"} target={config.socials.x ? "_blank" : undefined} rel={config.socials.x ? "noreferrer" : undefined} className={!config.socials.x ? "unconfigured" : ""}>
+              <span className="x-mark">𝕏</span>
+            </a>
+            <a aria-label="Threads" href={config.socials.threads || "#"} target={config.socials.threads ? "_blank" : undefined} rel={config.socials.threads ? "noreferrer" : undefined} className={!config.socials.threads ? "unconfigured" : ""}>
+              <span className="threads-mark">@</span>
+            </a>
+            <a aria-label="YouTube" href={config.socials.youtube || "#"} target={config.socials.youtube ? "_blank" : undefined} rel={config.socials.youtube ? "noreferrer" : undefined} className={!config.socials.youtube ? "unconfigured" : ""}>
+              <Youtube size={16} />
+            </a>
+            <a aria-label="Instagram" href={config.socials.instagram || "#"} target={config.socials.instagram ? "_blank" : undefined} rel={config.socials.instagram ? "noreferrer" : undefined} className={!config.socials.instagram ? "unconfigured" : ""}>
+              <Instagram size={16} />
+            </a>
+          </div>
+
+          <div className="whatsapp-box">
+            <span>WHATSAPP</span>
+            <a href={wa()} target="_blank" rel="noreferrer">+44 7418 320714</a>
+          </div>
+
+          <a className="mini-button" href={wa()} target="_blank" rel="noreferrer">
+            START A PROJECT <ArrowRight size={12} />
+          </a>
+        </div>
+      </div>
+
+      <div className="container footer-bottom">
+        <span>© {new Date().getFullYear()} IMPCO AGENCY. ALL RIGHTS RESERVED.</span>
+        <span>
+          <Link to="/privacy">PRIVACY POLICY</Link>
+          <Link to="/terms">TERMS OF SERVICE</Link>
+        </span>
+      </div>
+    </footer>
+  );
 }
 
-function Label({children}){return <div className="label"><i></i>{children}</div>}
-function Buttons({gold=false}){return <div className="buttons"><a className={gold?"btn gold":"btn"} href={wa()} target="_blank" rel="noreferrer">Start a Project <ArrowRight/></a><a className="btn ghost" href={mail()}>Contact Us <ArrowRight/></a></div>}
-
-function Home(){
- const cards=[["01","◇","3D DESIGN & ANIMATION","Immersive 3D visuals, product showcases, environments, animation and interactive experiences.","3D","/3d"],
- ["02","◇","AI SOLUTIONS","Intelligent systems and automation that help businesses work smarter, faster and more efficiently.","AI","/ai"],
- ["03","◇","WEB SOLUTIONS","Modern websites and web applications, e-commerce and scalable digital experiences.","WEB","/web"],
- ["04","◇","BRANDING & CREATIVE","Complete visual identities and digital experiences that make brands impossible to ignore.","Branding","/branding"]];
- return <><main className="home">
-  <section className="home-hero wrap"><div className="hero-copy"><Label>3D · AI · WEB · BRANDING · BRANDING</Label><h1>WE BUILD WHAT<br/><span>IMAGINATION</span><br/>DEMANDS.</h1><p>IMPCO Agency combines 3D design, artificial intelligence, web technology and creative branding to help businesses transform ideas into exceptional digital experiences.</p><Buttons/></div><div className="hero-visual"><img src={A+images.homeHero}/><div className="tag t1">3D / ANIMATION</div><div className="tag t2">AI / BRANDING</div><div className="tag t3">WEB / DIGITAL</div></div></section>
-  <section className="wrap create"><Label>OUR CAPABILITIES</Label><h2>WHAT WE CREATE</h2><p className="intro">From high-performance digital products and immersive experiences to powerful brand identities, we create the possibilities that turn ideas into impact.</p><div className="cap-grid">{cards.map(([n,ic,t,d,l,p])=><Link to={p} className="cap" key={n}><em>{ic}</em><strong>{n}</strong><h3>{t}</h3><p>{d}</p><span>Explore {l} <ArrowRight/></span></Link>)}</div></section>
-  <section className="wrap meet"><div className="meet-img"><img src={A+images.homeFeature}/></div><div><Label>WHY IMPCO</Label><h2>CREATIVITY MEETS<br/>TECHNOLOGY</h2><p>We leverage technology and creative thinking to build experiences that make brands unforgettable.</p><div className="mini-grid"><div><b>Creative Thinking</b><span>Ideas crafted for meaningful impact.</span></div><div><b>Technical Expertise</b><span>Modern solutions built to perform.</span></div><div><b>End-to-End Solutions</b><span>From concept through launch.</span></div><div><b>Built Around Your Goals</b><span>Strategy aligned with your vision.</span></div></div></div></section>
-  <section className="wrap portfolio"><Label>PORTFOLIO</Label><h2>A GLIMPSE OF WHAT WE DO</h2><div className="home-projects">{images.homeProjects.map(([im,t,tag])=><div className="home-project" key={t}><img src={A+im}/><div><span>{tag}</span><h3>{t}</h3><p>Selected work from the IMPCO creative portfolio.</p></div></div>)}</div><div className="filter-links"><Link to="/3d">View All 3D Work</Link><Link to="/ai">View All AI Work</Link><Link to="/web">View All Web Work</Link><Link to="/branding">View All Branding Work</Link></div></section>
-  <section className="process wrap"><Label>OUR PROCESS</Label><h2>FROM IDEA TO REALITY</h2><div className="process-row">{["DISCOVER","DESIGN","BUILD","DELIVER"].map((x,i)=><div key={x}><b>0{i+1}</b><h3>{x}</h3><p>We understand your needs, develop the right solution and deliver with precision.</p></div>)}</div></section>
-  <section className="ambition wrap"><Label>WHO WE WORK WITH</Label><h2>BUILT FOR AMBITIOUS IDEAS</h2><p>We partner with startups, businesses, agencies and organizations ready to turn bold ideas into meaningful digital experiences.</p><div className="pills">{["Startups","Businesses","Agencies","Enterprises","Product Designers","Creative Teams","Organizations"].map(x=><span key={x}>{x}</span>)}</div></section>
-  <section id="about" className="wrap about-section"><div><Label>ABOUT IMPCO</Label><h2>CREATIVE THINKING.<br/><span>TECHNICAL PRECISION.</span></h2><p>IMPCO Agency is a multidisciplinary digital studio bringing 3D, AI, web technology and branding together under one roof. We work with companies and individuals to turn ideas into clear, engaging and purposeful digital experiences.</p><p>Our work spans different fields and project types — from product visualisation, 3D environments and animation to intelligent AI systems, websites, web applications, e-commerce experiences and complete brand identities. Every engagement is shaped around the client's goals, audience and practical needs.</p><p>Whether we're helping a growing company launch a digital presence, supporting an established organisation with a new platform, or helping an individual bring a creative idea to life, our approach combines design, technology and dependable execution from concept to delivery.</p></div><div className="about-points"><div><b>3D & VISUAL EXPERIENCES</b><span>Product, environment, character, animation and visualisation work.</span></div><div><b>AI & AUTOMATION</b><span>Practical intelligent tools, automation and AI-powered experiences.</span></div><div><b>WEB & DIGITAL PRODUCTS</b><span>Websites, applications, e-commerce and scalable digital experiences.</span></div><div><b>BRANDING & CREATIVE</b><span>Identity systems, creative direction and digital brand expression.</span></div></div></section>
-  <section className="home-cta"><h2>HAVE AN IDEA?<br/><span>LET'S BUILD IT.</span></h2><p>Tell us what you're thinking about. We'll help turn the idea into a powerful digital experience.</p><Buttons/></section>
- </main><Footer/></>
+function SectionLabel({ children }) {
+  return <div className="section-label"><span></span>{children}</div>;
 }
 
-function PortfolioViewer({project,index,onClose,onChange}){
- const touchStart=React.useRef(null);
- const gallery=project.images.slice(0,5);
- const total=gallery.length;
- const change=(offset)=>onChange((index+offset+total)%total);
- React.useEffect(()=>{
-  const onKeyDown=(event)=>{
-   if(event.key==="Escape")onClose();
-   if(event.key==="ArrowLeft")change(-1);
-   if(event.key==="ArrowRight")change(1);
+function Buttons({ accent = false }) {
+  return (
+    <div className="button-row">
+      <a className={accent ? "button button-primary button-accent" : "button button-primary"} href={wa()} target="_blank" rel="noreferrer">
+        Start a Project <ArrowRight size={16} />
+      </a>
+      <a className="button button-secondary" href={mail()}>
+        Contact Us <ArrowRight size={16} />
+      </a>
+    </div>
+  );
+}
+
+function Home() {
+  const capabilities = [
+    ["01", "3D DESIGN & ANIMATION", "Immersive visual storytelling for products, environments, character work, and motion-led experiences.", "/3d"],
+    ["02", "AI SOLUTIONS", "Smart automation and AI experiences designed to improve customer journeys and business operations.", "/ai"],
+    ["03", "WEB SOLUTIONS", "High-performing digital experiences built for modern brands, e-commerce, and scalable growth.", "/web"],
+    ["04", "BRANDING & CREATIVE", "Visual systems, brand strategy and digital creativity that help brands stand out with clarity.", "/branding"]
+  ];
+
+  return (
+    <main className="page-shell">
+      <section className="hero-section container">
+        <div className="hero-copy">
+          <SectionLabel>3D · AI · WEB · BRANDING</SectionLabel>
+          <h1>
+            WE BUILD WHAT
+            <span>IMAGINATION</span>
+            DEMANDS.
+          </h1>
+          <p>
+            IMPCO Agency blends creative strategy, 3D execution, AI systems, and digital design to shape experiences that feel premium and perform brilliantly.
+          </p>
+          <Buttons />
+        </div>
+
+        <div className="hero-visual">
+          <img src={A + images.homeHero} alt="IMPCO hero visual" />
+          <div className="floating-tag tag-one">3D / ANIMATION</div>
+          <div className="floating-tag tag-two">AI / BRANDING</div>
+          <div className="floating-tag tag-three">WEB / DIGITAL</div>
+        </div>
+      </section>
+
+      <section className="container section-block">
+        <SectionLabel>OUR CAPABILITIES</SectionLabel>
+        <div className="section-header split-header">
+          <h2>WHAT WE CREATE</h2>
+        </div>
+        <p className="section-intro">
+          From strategic digital products to immersive brand experiences, we turn bold ideas into polished, measurable outcomes.
+        </p>
+
+        <div className="capability-grid">
+          {capabilities.map(([id, title, copy, href]) => (
+            <Link key={id} to={href} className="capability-card">
+              <span className="card-index">{id}</span>
+              <h3>{title}</h3>
+              <p>{copy}</p>
+              <span className="card-link">Explore <ArrowRight size={14} /></span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="container feature-section section-block">
+        <div className="feature-image">
+          <img src={A + images.homeFeature} alt="IMPCO creative studio" />
+        </div>
+        <div className="feature-copy">
+          <SectionLabel>WHY IMPCO</SectionLabel>
+          <h2>CREATIVITY MEETS TECHNOLOGY</h2>
+          <p>
+            We combine clear strategy with modern execution so every project feels distinctive, useful, and built to perform at scale.
+          </p>
+          <div className="fact-grid">
+            <div>
+              <strong>Creative Thinking</strong>
+              <span>Smart ideas shaped around your audience.</span>
+            </div>
+            <div>
+              <strong>Technical Expertise</strong>
+              <span>Modern systems built to be reliable and scalable.</span>
+            </div>
+            <div>
+              <strong>End-to-End Delivery</strong>
+              <span>From concept through launch and ongoing support.</span>
+            </div>
+            <div>
+              <strong>Goal-Focused</strong>
+              <span>Every decision aligned to your outcomes.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container section-block">
+        <SectionLabel>PORTFOLIO</SectionLabel>
+        <div className="section-header split-header">
+          <h2>A GLIMPSE OF WHAT WE DO</h2>
+        </div>
+
+        <div className="portfolio-grid">
+          {images.homeProjects.map(([image, title, tag]) => (
+            <article className="portfolio-card" key={title}>
+              <img src={A + image} alt={title} loading="lazy" />
+              <div className="portfolio-info">
+                <span>{tag}</span>
+                <h3>{title}</h3>
+                <p>Selected work from the IMPCO portfolio.</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="inline-links">
+          <Link to="/3d">View All 3D Work</Link>
+          <Link to="/ai">View All AI Work</Link>
+          <Link to="/web">View All Web Work</Link>
+          <Link to="/branding">View All Branding Work</Link>
+        </div>
+      </section>
+
+      <section className="container section-block process-section">
+        <SectionLabel>OUR PROCESS</SectionLabel>
+        <div className="section-header split-header">
+          <h2>FROM IDEA TO REALITY</h2>
+        </div>
+
+        <div className="process-grid">
+          {['DISCOVER', 'DESIGN', 'BUILD', 'DELIVER'].map((item, index) => (
+            <div key={item} className="process-card">
+              <span>0{index + 1}</span>
+              <h3>{item}</h3>
+              <p>We clarify the vision, design the right solution, and deliver with precision.</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="container section-block audience-section">
+        <SectionLabel>WHO WE WORK WITH</SectionLabel>
+        <div className="section-header split-header">
+          <h2>BUILT FOR AMBITIOUS IDEAS</h2>
+        </div>
+        <p className="section-intro narrow">
+          We partner with startups, businesses, agencies, and organizations ready to grow through smarter digital experiences.
+        </p>
+        <div className="pill-list">
+          {['Startups', 'Businesses', 'Agencies', 'Enterprises', 'Product Designers', 'Creative Teams', 'Organizations'].map((pill) => (
+            <span key={pill}>{pill}</span>
+          ))}
+        </div>
+      </section>
+
+      <section id="about" className="container about-section section-block">
+        <div>
+          <SectionLabel>ABOUT IMPCO</SectionLabel>
+          <h2>CREATIVE THINKING.<br /><span>TECHNICAL PRECISION.</span></h2>
+          <p>
+            IMPCO Agency is a multidisciplinary digital studio bringing 3D, AI, web technology, and branding together under one roof.
+          </p>
+          <p>
+            We help businesses and individuals turn ambitious ideas into high-impact experiences that feel elevated and work beautifully.
+          </p>
+          <p>
+            From launching digital identities to building modern web experiences and immersive visuals, we focus on clarity, performance, and memorable execution.
+          </p>
+        </div>
+
+        <div className="about-points">
+          {[
+            ['3D & VISUAL EXPERIENCES', 'Product storytelling, animation, environments, and immersive visual design.'],
+            ['AI & AUTOMATION', 'Practical, scalable AI experiences that improve business workflow and customer engagement.'],
+            ['WEB & DIGITAL PRODUCTS', 'Websites, apps, and product experiences built for conversion and usability.'],
+            ['BRANDING & CREATIVE', 'Identity systems and creative direction designed to leave a lasting impression.']
+          ].map(([title, copy]) => (
+            <div key={title} className="about-point">
+              <strong>{title}</strong>
+              <span>{copy}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="cta-panel">
+        <div className="container cta-inner">
+          <SectionLabel>HAVE AN IDEA?</SectionLabel>
+          <h2>LET'S BUILD IT.</h2>
+          <p>Tell us what you're planning, and we’ll help turn it into a sharper digital experience.</p>
+          <Buttons />
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function PortfolioViewer({ project, index, onClose, onChange }) {
+  const startX = React.useRef(null);
+  const gallery = project.images;
+  const total = gallery.length;
+
+  const change = (offset) => {
+    onChange((index + offset + total) % total);
   };
-  document.addEventListener("keydown",onKeyDown);
-  const previousOverflow=document.body.style.overflow;
-  document.body.style.overflow="hidden";
-  return()=>{document.removeEventListener("keydown",onKeyDown);document.body.style.overflow=previousOverflow;};
- },[index,total,onClose]);
- return <div className="portfolio-viewer" role="dialog" aria-modal="true" aria-label={`${project.title} image viewer`} onClick={onClose}>
-  <div className="viewer-panel" onClick={(event)=>event.stopPropagation()} onTouchStart={(event)=>{touchStart.current=event.changedTouches[0].clientX;}} onTouchEnd={(event)=>{const distance=event.changedTouches[0].clientX-touchStart.current;if(Math.abs(distance)>45)change(distance>0?-1:1);}}>
-   <button className="viewer-close" type="button" onClick={onClose} aria-label="Close image viewer"><X/></button>
-   <div className="viewer-heading"><span>3D / {project.id}</span><h2>{project.title}</h2></div>
-  <div className="viewer-image-wrap"><img src={A+gallery[index]} alt={`${project.title}, image ${index+1} of ${total}`}/></div>
-   {total>1&&<><button className="viewer-nav viewer-prev" type="button" onClick={()=>change(-1)} aria-label="Previous image"><ChevronLeft/></button><button className="viewer-nav viewer-next" type="button" onClick={()=>change(1)} aria-label="Next image"><ChevronRight/></button></>}
-  <div className="viewer-footer"><span>{index+1} / {total}</span>{total>1&&<div className="viewer-dots" aria-label="Choose image">{gallery.map((image,imageIndex)=><button key={`${image}-${imageIndex}`} className={imageIndex===index?"active":""} type="button" onClick={()=>onChange(imageIndex)} aria-label={`Show image ${imageIndex+1}`}/>)}</div>}<span>ESC TO CLOSE</span></div>
-  </div>
- </div>;
+
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+      if (event.key === "ArrowLeft") change(-1);
+      if (event.key === "ArrowRight") change(1);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [index, total, onClose]);
+
+  return (
+    <div className="viewer-overlay" onClick={onClose}>
+      <div className="viewer-panel" onClick={(event) => event.stopPropagation()}>
+        <button className="viewer-close" type="button" onClick={onClose} aria-label="Close image viewer">
+          <X size={18} />
+        </button>
+
+        <div className="viewer-header">
+          <span>{project.id}</span>
+          <h3>{project.title}</h3>
+        </div>
+
+        <div className="viewer-stage"
+          onTouchStart={(event) => {
+            startX.current = event.changedTouches[0].clientX;
+          }}
+          onTouchEnd={(event) => {
+            const dx = event.changedTouches[0].clientX - startX.current;
+            if (Math.abs(dx) > 45) change(dx > 0 ? -1 : 1);
+          }}
+        >
+          <img src={A + gallery[index]} alt={`${project.title} ${index + 1}`} />
+          {total > 1 && (
+            <>
+              <button type="button" className="viewer-nav prev" onClick={() => change(-1)} aria-label="Previous image">
+                <ChevronLeft size={20} />
+              </button>
+              <button type="button" className="viewer-nav next" onClick={() => change(1)} aria-label="Next image">
+                <ChevronRight size={20} />
+              </button>
+            </>
+          )}
+        </div>
+
+        <div className="viewer-footer">
+          <span>{index + 1} / {total}</span>
+          {total > 1 && (
+            <div className="viewer-dots">
+              {gallery.map((image, imageIndex) => (
+                <button
+                  key={`${image}-${imageIndex}`}
+                  type="button"
+                  className={imageIndex === index ? "active" : ""}
+                  onClick={() => onChange(imageIndex)}
+                  aria-label={`View image ${imageIndex + 1}`}
+                />
+              ))}
+            </div>
+          )}
+          <span>ESC TO CLOSE</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function ThreeD(){
- const [viewer,setViewer]=React.useState(null);
- const open=(project)=>setViewer({project,index:0});
- return <><main className="portfolio-page threeD-page"><section className="page-head wrap"><Label>IMPCO / 3D</Label><h1>3D</h1><p>A collection of 3D experiences, visuals and environments we've created.</p><div className="tabs">{["ALL","CONCEPTS","PRODUCTS","ARCHITECTURE","ENVIRONMENTS","CHARACTERS","OTHER"].map((x,i)=><button className={i===0?"sel":""} key={x}>{x}</button>)}</div></section><section className="threeD-list wrap">{images.threeD.map((project)=><button className="threeD-item" type="button" key={project.id} onClick={()=>open(project)} aria-label={`Open ${project.title} gallery`}><img src={A+project.images[0]} alt={project.title} loading="lazy"/><span className="threeD-caption"><span>3D</span><strong>{project.title}</strong><ArrowUpRight/></span></button>)}</section></main><Footer/>{viewer&&<PortfolioViewer project={viewer.project} index={viewer.index} onClose={()=>setViewer(null)} onChange={(index)=>setViewer({...viewer,index})}/>}</>;
+function ThreeD() {
+  const [viewer, setViewer] = React.useState(null);
+
+  return (
+    <>
+      <main className="page-shell portfolio-page">
+        <section className="container section-block page-header">
+          <SectionLabel>IMPCO / 3D</SectionLabel>
+          <h1>3D</h1>
+          <p>Immersive visuals, product storytelling, environments, and motion-led concepts crafted for impact.</p>
+        </section>
+
+        <section className="container gallery-grid section-block">
+          {images.threeD.map((project) => (
+            <button key={project.id} type="button" className="gallery-card" onClick={() => setViewer({ project, index: 0 })}>
+              <img src={A + project.images[0]} alt={project.title} loading="lazy" />
+              <div className="gallery-overlay">
+                <span>3D</span>
+                <strong>{project.title}</strong>
+                <ArrowUpRight size={18} />
+              </div>
+            </button>
+          ))}
+        </section>
+      </main>
+
+      <Footer />
+
+      {viewer && (
+        <PortfolioViewer
+          project={viewer.project}
+          index={viewer.index}
+          onClose={() => setViewer(null)}
+          onChange={(nextIndex) => setViewer({ ...viewer, index: nextIndex })}
+        />
+      )}
+    </>
+  );
 }
 
-function AI(){
- const services=["AI CHATBOTS","AI AGENTS & AUTOMATION","AI-POWERED WEBSITES","AI CONTENT & MEDIA","CUSTOM AI SOLUTIONS","AI-DRIVEN DATA","AI FOR E-COMMERCE","AI IMPLEMENTATION"];
- return <><main className="ai-page"><section className="ai-hero wrap"><div><Label>AI / SOLUTIONS</Label><h1>INTELLIGENCE,<br/><span>BUILT FOR<br/>YOUR BUSINESS.</span></h1><p>We design and build practical AI solutions that automate workflows, improve customer experiences and create new possibilities.</p><Buttons/><div className="ai-stats"><b>8+ <small>AI SOLUTIONS</small></b><b>100% <small>SCALABLE</small></b><b>24/7 <small>SUPPORT</small></b></div></div><div className="ai-art"><div className="chat-card">AI assistant<br/><b>How can I help your business?</b><div className="chat-line"></div><div className="chat-line short"></div></div></div></section>
- <section className="wrap ai-services"><Label>WHAT WE CAN BUILD</Label><h2>WHAT WE CAN BUILD<br/><span>WITH AI</span></h2><p>From intelligent customer solutions to business automation, we turn AI into practical solutions.</p><div className="service-grid">{services.map((x,i)=><div key={x}><b>◈</b><small>0{i+1}</small><h3>{x}</h3><p>Practical AI systems designed around your business needs and real-world outcomes.</p><a href={wa()} target="_blank" rel="noreferrer">Explore AI <ArrowRight/></a></div>)}</div></section>
- <section className="wrap purpose"><div><Label>THE DIFFERENCE</Label><h2>AI WITH<br/><span>A PURPOSE</span></h2><p>We don't use AI simply because it's trending. We focus on finding where AI can create real value for your business.</p><blockquote>“Build smarter. Build with AI.”</blockquote></div><div className="purpose-cards">{["POWERFUL","SCALABLE","SECURE","HUMAN-CENTRED"].map(x=><div key={x}><b>{x}</b><p>Thoughtful systems made for sustainable growth.</p></div>)}</div></section>
- <section className="wrap ai-process"><Label>PROCESS</Label><h2>FROM IDEA TO<br/><span>INTELLIGENCE</span></h2><div>{["DISCOVER","STRATEGY","BUILD","OPTIMIZE"].map((x,i)=><article key={x}><b>0{i+1}</b><h3>{x}</h3><p>Clear goals, thoughtful design and measurable results.</p></article>)}</div></section>
- <section className="wrap ai-services ai-business"><Label>CAPABILITIES</Label><h2>WHAT CAN AI DO<br/><span>FOR YOUR BUSINESS?</span></h2><div className="service-grid compact">{["CUSTOMER SUPPORT","LEAD GENERATION","BUSINESS AUTOMATION","CONTENT CREATION","DATA ANALYSIS","E-COMMERCE","MARKETING","INTERNAL OPERATIONS"].map(x=><div key={x}><h3>{x}</h3><p>Automate, analyze and improve the work that matters.</p></div>)}</div></section>
- <section className="wrap ai-work"><Label>PORTFOLIO</Label><h2>AI SOLUTIONS<br/><span>WE'VE BUILT</span></h2><div className="ai-project-grid">{images.aiProjects.map(([im,t])=><div key={t}><img src={A+im}/><span>{t}</span></div>)}</div></section>
- <section className="ai-cta"><Label>READY FOR AI?</Label><h2>READY TO PUT<br/><span>AI TO WORK?</span></h2><p>Tell us what you want to automate, improve or create. We'll help turn the idea into practical AI.</p><Buttons/><div className="ai-values"><b>Fast</b><b>Scalable</b><b>Practical</b></div></section></main><Footer/></>
+function AI() {
+  const services = [
+    "AI CHATBOTS",
+    "AI AGENTS & AUTOMATION",
+    "AI-POWERED WEBSITES",
+    "AI CONTENT & MEDIA",
+    "CUSTOM AI SOLUTIONS",
+    "AI-DRIVEN DATA",
+    "AI FOR E-COMMERCE",
+    "AI IMPLEMENTATION"
+  ];
+
+  return (
+    <>
+      <main className="page-shell ai-page">
+        <section className="container hero-split section-block">
+          <div>
+            <SectionLabel>AI / SOLUTIONS</SectionLabel>
+            <h1>INTELLIGENCE,<br /><span>BUILT FOR<br />YOUR BUSINESS.</span></h1>
+            <p>We design practical AI experiences that automate the right work, improve service, and create measurable value.</p>
+            <Buttons />
+            <div className="metrics-row">
+              <div><strong>8+</strong><span>AI SOLUTIONS</span></div>
+              <div><strong>100%</strong><span>SCALABLE</span></div>
+              <div><strong>24/7</strong><span>SUPPORT</span></div>
+            </div>
+          </div>
+
+          <div className="ai-visual">
+            <div className="chat-card">
+              <span>AI assistant</span>
+              <strong>How can I help your business?</strong>
+              <div className="line" />
+              <div className="line short" />
+            </div>
+          </div>
+        </section>
+
+        <section className="container section-block">
+          <SectionLabel>WHAT WE CAN BUILD</SectionLabel>
+          <h2 className="stacked-heading">WHAT WE CAN BUILD<br /><span>WITH AI</span></h2>
+          <div className="service-grid">
+            {services.map((service, index) => (
+              <div key={service} className="service-card">
+                <b>◈</b>
+                <small>0{index + 1}</small>
+                <h3>{service}</h3>
+                <p>Purpose-built systems aligned with your business goals and operational realities.</p>
+                <a href={wa()} target="_blank" rel="noreferrer">Explore AI <ArrowRight size={14} /></a>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="container section-block purpose-grid">
+          <div>
+            <SectionLabel>THE DIFFERENCE</SectionLabel>
+            <h2>AI WITH<br /><span>A PURPOSE</span></h2>
+            <p>We do not chase trends. We identify the places where AI creates meaningful value and build around that.</p>
+            <blockquote>“Build smarter. Build with AI.”</blockquote>
+          </div>
+
+          <div className="purpose-cards">
+            {['POWERFUL', 'SCALABLE', 'SECURE', 'HUMAN-CENTRED'].map((item) => (
+              <div key={item} className="purpose-card">
+                <strong>{item}</strong>
+                <p>Thoughtful systems designed for sustainable growth and strong customer experiences.</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="container section-block ai-work-section">
+          <SectionLabel>PORTFOLIO</SectionLabel>
+          <h2 className="stacked-heading">AI SOLUTIONS<br /><span>WE'VE BUILT</span></h2>
+          <div className="project-strip">
+            {images.aiProjects.map(([image, name]) => (
+              <div key={name} className="project-tile">
+                <img src={A + image} alt={name} loading="lazy" />
+                <span>{name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
 }
 
-function Web(){
- return <><main className="web-page"><section className="web-head wrap"><Label>IMPCO AGENCY / WEB</Label><h1><span>WEB</span> SOLUTIONS</h1><p>Websites, applications and digital experiences we've built.</p><div className="project-count">12 PROJECTS</div><div className="tabs">{["ALL","WEBSITES","WEB APPS","E-COMMERCE","APPLICATIONS","OTHER"].map((x,i)=><button className={i===0?"sel":""} key={x}>{x}</button>)}</div></section><section className="web-grid wrap">{images.webProjects.map(([im,t,tag],i)=><article className={(i===0||i===3||i===8)?"wide":""} key={t}><img src={A+im}/><div><span>{tag}</span><h3>{t}</h3><a href={wa()} target="_blank" rel="noreferrer">Visit Website <ArrowRight/></a></div></article>)}</section></main><Footer/></>
+function Web() {
+  return (
+    <>
+      <main className="page-shell web-page">
+        <section className="container section-block page-header">
+          <SectionLabel>IMPCO AGENCY / WEB</SectionLabel>
+          <h1><span>WEB</span> SOLUTIONS</h1>
+          <p>Modern websites and digital products built for clarity, performance, and conversion.</p>
+          <div className="project-count">12 PROJECTS</div>
+        </section>
+
+        <section className="container web-grid section-block">
+          {images.webProjects.map(([image, title, tag], index) => (
+            <article key={title} className={index === 0 || index === 3 || index === 8 ? "wide" : ""}>
+              <img src={A + image} alt={title} loading="lazy" />
+              <div className="web-info">
+                <span>{tag}</span>
+                <h3>{title}</h3>
+                <a href={wa()} target="_blank" rel="noreferrer">Visit Website <ArrowRight size={14} /></a>
+              </div>
+            </article>
+          ))}
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
 }
 
-function Branding(){
- return <><main className="brand-page"><section className="brand-hero"><div className="brand-hero-copy wrap"><Label>IMPCO AGENCY / BRANDING</Label><h1>BRANDING</h1><p>Building memorable brands through strategy, identity, creative direction and digital expression.</p><Buttons gold/></div><div className="brand-hero-collage">{images.branding.slice(0,4).map(([im,t])=><img key={t} src={A+im}/>)}</div></section>
- <section className="wrap brand-products"><Label>OUR BRANDING WORK</Label><h2>BRANDED PRODUCTS<br/><span>& CREATIVE WORK</span></h2><div className="tabs">{["ALL","IDENTITY","PACKAGING","PRINT","DIGITAL","CAMPAIGNS","OTHER"].map((x,i)=><button className={i===0?"sel":""} key={x}>{x}</button>)}</div><div className="brand-stack">{images.branding.map(([im,t])=><article key={t}><img src={A+im}/><span>{t}</span></article>)}</div></section>
- <section className="wrap identities"><Label>BRANDING</Label><h2>COMPLETE<br/><span>BRAND IDENTITIES</span></h2><div>{images.branding.slice(0,4).map(([im,t])=><article key={t}><img src={A+im}/><b>{t}</b></article>)}</div></section>
- <section className="brand-cta"><Label>LET'S CREATE TOGETHER</Label><h2>READY TO BUILD</h2><p>Have a brand that needs a stronger identity? Let's create something memorable.</p><Buttons gold/></section></main><Footer/></>
+function Branding() {
+  return (
+    <>
+      <main className="page-shell brand-page">
+        <section className="brand-hero">
+          <div className="container brand-hero-inner">
+            <div className="brand-copy">
+              <SectionLabel>IMPCO AGENCY / BRANDING</SectionLabel>
+              <h1>BRANDING</h1>
+              <p>Identity systems and creative direction that give your business a sharper, stronger presence.</p>
+              <Buttons accent />
+            </div>
+
+            <div className="brand-collage">
+              {images.branding.slice(0, 4).map(([image, title]) => (
+                <img key={title} src={A + image} alt={title} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="container section-block brand-work">
+          <SectionLabel>OUR BRANDING WORK</SectionLabel>
+          <h2>BRANDED PRODUCTS<br /><span>& CREATIVE WORK</span></h2>
+          <div className="brand-grid">
+            {images.branding.map(([image, title]) => (
+              <article key={title} className="brand-tile">
+                <img src={A + image} alt={title} loading="lazy" />
+                <span>{title}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
 }
 
+function Legal({ type }) {
+  const privacy = type === "privacy";
 
-function Legal({type}){ const privacy=type==="privacy"; return <main className="legal-page wrap"><Label>IMPCO AGENCY / {privacy?"PRIVACY POLICY":"TERMS OF SERVICE"}</Label><h1>{privacy?"PRIVACY POLICY":"TERMS OF SERVICE"}</h1><p className="legal-updated">Last updated: September 16, 2026</p>{privacy?<><h2>1. Information We Collect</h2><p>When you contact IMPCO Agency, we may receive the information you choose to provide, such as your name, email address, phone number, company details and project requirements. Our website may also process basic technical information needed to operate and secure the site.</p><h2>2. How We Use Information</h2><p>We use information to respond to enquiries, discuss and deliver services, communicate about projects, improve our website and maintain security. We do not sell personal information.</p><h2>3. Email, WhatsApp and Social Links</h2><p>When you choose to contact us by email, WhatsApp or a social platform, you leave this website and use that provider's service. Their own privacy policies and terms apply to information handled by those services.</p><h2>4. Cookies and Analytics</h2><p>If analytics, cookies or similar tools are added in the future, this policy may be updated to explain their purpose and your available choices.</p><h2>5. Data Retention and Security</h2><p>We retain project and enquiry information only for as long as reasonably necessary for business, legal or operational purposes and take reasonable measures to protect it.</p><h2>6. Your Rights</h2><p>Depending on applicable law, you may have rights to request access, correction or deletion of personal information, or to object to certain processing. Contact us at <a href={mail()}>hello@impcoagency.com</a>.</p><h2>7. Changes</h2><p>We may update this policy when our services, technology or legal obligations change. The date above will be updated when material changes are made.</p></>:<><h2>1. Services</h2><p>IMPCO Agency provides creative and digital services including 3D design and animation, AI solutions, web development and branding. The exact scope, deliverables, timeline and fees for a project are agreed with the client before work begins.</p><h2>2. Client Responsibilities</h2><p>Clients are responsible for supplying accurate information, approvals, content, credentials and other materials reasonably required to complete a project. Delays in client feedback or supplied materials may affect delivery dates.</p><h2>3. Fees and Payment</h2><p>Project fees, deposits, milestones and payment dates are agreed in writing for each engagement. Work may be paused when agreed payments are overdue.</p><h2>4. Revisions and Approval</h2><p>Revisions are handled according to the scope agreed for the project. Once a deliverable is approved, later changes may be treated as additional work.</p><h2>5. Intellectual Property</h2><p>Unless a project agreement states otherwise, IMPCO retains ownership of its pre-existing tools, templates, processes and reusable know-how. Final client deliverables and their usage rights are transferred or licensed according to the agreed project terms and payment status.</p><h2>6. Third-Party Services</h2><p>Projects may use third-party software, hosting, APIs, platforms or assets. Their availability and terms are controlled by those providers and may affect project functionality or costs.</p><h2>7. Portfolio Use</h2><p>Unless a confidentiality agreement or project agreement says otherwise, IMPCO may display completed work in its portfolio and promotional materials.</p><h2>8. Limitation</h2><p>We aim to deliver professional work with reasonable care. To the extent permitted by applicable law, IMPCO is not responsible for indirect losses arising from use of a delivered website, application, creative asset or service.</p><h2>9. Cancellation</h2><p>Either party may end an engagement according to the agreed project terms. Fees for completed work, committed costs and approved deliverables remain payable.</p><h2>10. Contact</h2><p>Questions about these terms can be sent to <a href={mail()}>hello@impcoagency.com</a>.</p></>}</main> }
+  return (
+    <main className="container legal-page section-block">
+      <SectionLabel>{privacy ? "PRIVACY POLICY" : "TERMS OF SERVICE"}</SectionLabel>
+      <h1>{privacy ? "PRIVACY POLICY" : "TERMS OF SERVICE"}</h1>
+      <p className="last-updated">Last updated: September 16, 2026</p>
 
-function App(){return <><Header/><Routes/></>}
-function Routes(){const p=useLocation().pathname; if(p==="/3d")return <ThreeD/>; if(p==="/ai")return <AI/>; if(p==="/web")return <Web/>; if(p==="/branding")return <Branding/>; if(p==="/privacy")return <><Legal type="privacy"/><Footer/></>; if(p==="/terms")return <><Legal type="terms"/><Footer/></>; return <Home/>}
-createRoot(document.getElementById("root")).render(<BrowserRouter><App/></BrowserRouter>);
+      {privacy ? (
+        <>
+          <h2>1. Information We Collect</h2>
+          <p>When you contact IMPCO Agency, we may receive the information you choose to provide, such as your name, email address, phone number, company details and project requirements. Our website may also process basic technical information needed to operate and secure the site.</p>
+          <h2>2. How We Use Information</h2>
+          <p>We use information to respond to enquiries, discuss and deliver services, communicate about projects, improve our website and maintain security. We do not sell personal information.</p>
+          <h2>3. Email, WhatsApp and Social Links</h2>
+          <p>When you choose to contact us by email, WhatsApp or a social platform, you leave this website and use that provider's service. Their own privacy policies and terms apply to information handled by those services.</p>
+          <h2>4. Cookies and Analytics</h2>
+          <p>If analytics, cookies or similar tools are added in the future, this policy may be updated to explain their purpose and your available choices.</p>
+          <h2>5. Data Retention and Security</h2>
+          <p>We retain project and enquiry information only for as long as reasonably necessary for business, legal or operational purposes and take reasonable measures to protect it.</p>
+          <h2>6. Your Rights</h2>
+          <p>Depending on applicable law, you may have rights to request access, correction or deletion of personal information, or to object to certain processing. Contact us at <a href={mail()}>hello@impcoagency.com</a>.</p>
+          <h2>7. Changes</h2>
+          <p>We may update this policy when our services, technology or legal obligations change. The date above will be updated when material changes are made.</p>
+        </>
+      ) : (
+        <>
+          <h2>1. Services</h2>
+          <p>IMPCO Agency provides creative and digital services including 3D design, AI systems, web development, digital strategy, and branding support.</p>
+          <h2>2. Scope and Deliverables</h2>
+          <p>The exact scope, timeline, and deliverables for every project will be agreed in writing before work begins. IMPCO Agency will perform services in line with the approved brief and agreed payment schedule.</p>
+          <h2>3. Client Responsibilities</h2>
+          <p>Clients are responsible for timely approvals, access to assets, feedback, and any information needed to keep the project moving. Delays caused by client input may affect timing and delivery milestones.</p>
+          <h2>4. Intellectual Property</h2>
+          <p>Unless otherwise agreed in writing, project work created for a client remains subject to the project agreement and relevant ownership terms. General concepts and samples remain the property of IMPCO Agency unless otherwise stated.</p>
+          <h2>5. Payments</h2>
+          <p>Fees and payment terms will be agreed before a project starts. Late payments may suspend the delivery of work until the outstanding balance is resolved.</p>
+          <h2>6. Limitation of Liability</h2>
+          <p>IMPCO Agency will use reasonable care in delivering services, but cannot be held liable for indirect, incidental or consequential losses arising from delays, third-party services, or business outcomes beyond the agreed scope.</p>
+          <h2>7. Governing Law</h2>
+          <p>These terms are governed by the laws of the jurisdiction in which IMPCO Agency operates, and any disputes will be resolved through the relevant legal process.</p>
+        </>
+      )}
+    </main>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/3d" element={<ThreeD />} />
+        <Route path="/ai" element={<AI />} />
+        <Route path="/web" element={<Web />} />
+        <Route path="/branding" element={<Branding />} />
+        <Route path="/privacy" element={<><Legal type="privacy" /><Footer /></>} />
+        <Route path="/terms" element={<><Legal type="terms" /><Footer /></>} />
+      </Routes>
+    </>
+  );
+}
+
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
