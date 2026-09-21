@@ -156,175 +156,89 @@ function Buttons({ accent = false }) {
 }
 
 function Home() {
-  const capabilities = [
-    ["01", "3D DESIGN & ANIMATION", "Immersive visual storytelling for products, environments, character work, and motion-led experiences.", "/3d"],
-    ["02", "AI SOLUTIONS", "Smart automation and AI experiences designed to improve customer journeys and business operations.", "/ai"],
-    ["03", "WEB SOLUTIONS", "High-performing digital experiences built for modern brands, e-commerce, and scalable growth.", "/web"],
-    ["04", "BRANDING & CREATIVE", "Visual systems, brand strategy and digital creativity that help brands stand out with clarity.", "/branding"]
-  ];
-
   return (
     <main className="page-shell">
-      <section className="hero-section container">
-        <div className="hero-copy">
-          <SectionLabel>3D · AI · WEB · BRANDING</SectionLabel>
-          <h1>
-            WE BUILD WHAT
-            <span>IMAGINATION</span>
-            DEMANDS.
-          </h1>
-          <p>
-            IMPCO Agency blends creative strategy, 3D execution, AI systems, and digital design to shape experiences that feel premium and perform brilliantly.
-          </p>
-          <Buttons />
+      <section className="home-hero">
+        <div className="home-hero-image">
+          <img src={A + images.homeHero} alt="Abstract IMPCO 3D artwork" />
         </div>
-
-        <div className="hero-visual">
-          <img src={A + images.homeHero} alt="IMPCO hero visual" />
-          <div className="floating-tag tag-one">3D / ANIMATION</div>
-          <div className="floating-tag tag-two">AI / BRANDING</div>
-          <div className="floating-tag tag-three">WEB / DIGITAL</div>
+        <div className="container home-hero-content">
+          <div className="home-hero-kicker">IMPCO AGENCY <span>/</span> DIGITAL STUDIO</div>
+          <h1>MAKE THE<br /><em>IMPOSSIBLE</em><br />VISIBLE.</h1>
+          <div className="home-hero-bottom">
+            <p>We build sharp identities, immersive visuals, intelligent systems, and digital experiences for brands with something to say.</p>
+            <Buttons />
+          </div>
+          <div className="home-hero-scroll">SCROLL TO EXPLORE <ArrowRight size={14} /></div>
         </div>
       </section>
 
-      <section className="container section-block">
-        <SectionLabel>OUR CAPABILITIES</SectionLabel>
-        <div className="section-header split-header">
-          <h2>WHAT WE CREATE</h2>
+      <section className="home-services">
+        <div className="container home-services-head">
+          <SectionLabel>WHAT WE DO</SectionLabel>
+          <p>One studio. Four ways to move your brand forward.</p>
         </div>
-        <p className="section-intro">
-          From strategic digital products to immersive brand experiences, we turn bold ideas into polished, measurable outcomes.
-        </p>
-
-        <div className="capability-grid">
-          {capabilities.map(([id, title, copy, href]) => (
-            <Link key={id} to={href} className="capability-card">
-              <span className="card-index">{id}</span>
-              <h3>{title}</h3>
+        <div className="service-rail">
+          {[
+            ["01", "3D / MOTION", "Visual worlds that make products impossible to ignore.", "/3d"],
+            ["02", "AI / SYSTEMS", "Useful intelligence that makes ambitious businesses move faster.", "/ai"],
+            ["03", "WEB / DIGITAL", "Web experiences designed to be felt, understood, and remembered.", "/web"],
+            ["04", "BRANDING / IDENTITY", "A distinct point of view, made visible across every touchpoint.", "/branding"]
+          ].map(([number, title, copy, href]) => (
+            <Link className="service-rail-item" to={href} key={number}>
+              <span>{number}</span>
+              <h2>{title}</h2>
               <p>{copy}</p>
-              <span className="card-link">Explore <ArrowRight size={14} /></span>
+              <ArrowUpRight size={20} />
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="container feature-section section-block">
-        <div className="feature-image">
-          <img src={A + images.homeFeature} alt="IMPCO creative studio" />
+      <section className="container home-intro section-block">
+        <div className="home-intro-title">
+          <SectionLabel>THE IMPCO APPROACH</SectionLabel>
+          <h2>NOT JUST<br /><span>ANOTHER</span><br />AGENCY.</h2>
         </div>
-        <div className="feature-copy">
-          <SectionLabel>WHY IMPCO</SectionLabel>
-          <h2>CREATIVITY MEETS TECHNOLOGY</h2>
-          <p>
-            We combine clear strategy with modern execution so every project feels distinctive, useful, and built to perform at scale.
-          </p>
-          <div className="fact-grid">
-            <div>
-              <strong>Creative Thinking</strong>
-              <span>Smart ideas shaped around your audience.</span>
-            </div>
-            <div>
-              <strong>Technical Expertise</strong>
-              <span>Modern systems built to be reliable and scalable.</span>
-            </div>
-            <div>
-              <strong>End-to-End Delivery</strong>
-              <span>From concept through launch and ongoing support.</span>
-            </div>
-            <div>
-              <strong>Goal-Focused</strong>
-              <span>Every decision aligned to your outcomes.</span>
-            </div>
+        <div className="home-intro-copy">
+          <p className="home-lede">We bring creative direction and technical craft into the same room. That is how good ideas become clear, confident experiences that people actually remember.</p>
+          <div className="home-stat-row">
+            <div><strong>04</strong><span>DISCIPLINES</span></div>
+            <div><strong>01</strong><span>CONNECTED STUDIO</span></div>
+            <div><strong>∞</strong><span>ROOM TO THINK</span></div>
           </div>
+          <Link className="text-link" to="/#about">More about IMPCO <ArrowRight size={16} /></Link>
         </div>
       </section>
 
-      <section className="container section-block">
-        <SectionLabel>PORTFOLIO</SectionLabel>
-        <div className="section-header split-header">
-          <h2>A GLIMPSE OF WHAT WE DO</h2>
+      <section className="container home-work section-block">
+        <div className="home-work-head">
+          <div>
+            <SectionLabel>SELECTED WORK</SectionLabel>
+            <h2>THE WORK<br /><span>SPEAKS.</span></h2>
+          </div>
+          <Link className="text-link" to="/3d">See all work <ArrowUpRight size={16} /></Link>
         </div>
-
-        <div className="portfolio-grid">
-          {images.homeProjects.map(([image, title, tag]) => (
-            <article className="portfolio-card" key={title}>
+        <div className="home-work-grid">
+          {images.homeProjects.slice(0, 4).map(([image, title, tag], index) => (
+            <Link className={`home-work-card work-${index + 1}`} to={tag === "3D" ? "/3d" : tag === "AI" ? "/ai" : tag === "WEB" ? "/web" : "/branding"} key={title}>
               <img src={A + image} alt={title} loading="lazy" />
-              <div className="portfolio-info">
-                <span>{tag}</span>
-                <h3>{title}</h3>
-                <p>Selected work from the IMPCO portfolio.</p>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="inline-links">
-          <Link to="/3d">View All 3D Work</Link>
-          <Link to="/ai">View All AI Work</Link>
-          <Link to="/web">View All Web Work</Link>
-          <Link to="/branding">View All Branding Work</Link>
-        </div>
-      </section>
-
-      <section className="container section-block process-section">
-        <SectionLabel>OUR PROCESS</SectionLabel>
-        <div className="section-header split-header">
-          <h2>FROM IDEA TO REALITY</h2>
-        </div>
-
-        <div className="process-grid">
-          {['DISCOVER', 'DESIGN', 'BUILD', 'DELIVER'].map((item, index) => (
-            <div key={item} className="process-card">
-              <span>0{index + 1}</span>
-              <h3>{item}</h3>
-              <p>We clarify the vision, design the right solution, and deliver with precision.</p>
-            </div>
+              <div className="home-work-caption"><span>{tag}</span><strong>{title}</strong><ArrowUpRight size={18} /></div>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="container section-block audience-section">
-        <SectionLabel>WHO WE WORK WITH</SectionLabel>
-        <div className="section-header split-header">
-          <h2>BUILT FOR AMBITIOUS IDEAS</h2>
-        </div>
-        <p className="section-intro narrow">
-          We partner with startups, businesses, agencies, and organizations ready to grow through smarter digital experiences.
-        </p>
-        <div className="pill-list">
-          {['Startups', 'Businesses', 'Agencies', 'Enterprises', 'Product Designers', 'Creative Teams', 'Organizations'].map((pill) => (
-            <span key={pill}>{pill}</span>
-          ))}
-        </div>
-      </section>
-
-      <section id="about" className="container about-section section-block">
-        <div>
-          <SectionLabel>ABOUT IMPCO</SectionLabel>
-          <h2>CREATIVE THINKING.<br /><span>TECHNICAL PRECISION.</span></h2>
-          <p>
-            IMPCO Agency is a multidisciplinary digital studio bringing 3D, AI, web technology, and branding together under one roof.
-          </p>
-          <p>
-            We help businesses and individuals turn ambitious ideas into high-impact experiences that feel elevated and work beautifully.
-          </p>
-          <p>
-            From launching digital identities to building modern web experiences and immersive visuals, we focus on clarity, performance, and memorable execution.
-          </p>
-        </div>
-
-        <div className="about-points">
-          {[
-            ['3D & VISUAL EXPERIENCES', 'Product storytelling, animation, environments, and immersive visual design.'],
-            ['AI & AUTOMATION', 'Practical, scalable AI experiences that improve business workflow and customer engagement.'],
-            ['WEB & DIGITAL PRODUCTS', 'Websites, apps, and product experiences built for conversion and usability.'],
-            ['BRANDING & CREATIVE', 'Identity systems and creative direction designed to leave a lasting impression.']
-          ].map(([title, copy]) => (
-            <div key={title} className="about-point">
-              <strong>{title}</strong>
-              <span>{copy}</span>
-            </div>
-          ))}
+      <section id="about" className="home-about">
+        <div className="container home-about-grid">
+          <div>
+            <SectionLabel>ABOUT IMPCO</SectionLabel>
+            <h2>BIG THINKING.<br /><span>BUILT PROPERLY.</span></h2>
+          </div>
+          <div>
+            <p className="home-lede">IMPCO is an independent digital studio for people who want to make something that matters. We keep the team close, the thinking sharp, and the output unmistakably yours.</p>
+            <Link className="text-link" to="/#about">Start a conversation <ArrowRight size={16} /></Link>
+          </div>
         </div>
       </section>
 
