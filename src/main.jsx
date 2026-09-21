@@ -157,8 +157,9 @@ function Buttons({ accent = false }) {
 
 function Home() {
   return (
-    <main className="page-shell">
-      <section className="home-hero">
+    <>
+      <main className="page-shell">
+        <section className="home-hero">
         <div className="container home-hero-content">
           <div className="home-hero-kicker">IMPCO AGENCY <span>/</span> DIGITAL STUDIO</div>
           <h1>MAKE THE<br /><em>IMPOSSIBLE</em><br />VISIBLE.</h1>
@@ -168,9 +169,9 @@ function Home() {
           </div>
           <div className="home-hero-scroll">SCROLL TO EXPLORE <ArrowRight size={14} /></div>
         </div>
-      </section>
+        </section>
 
-      <section className="home-services">
+        <section className="home-services">
         <div className="container home-services-head">
           <SectionLabel>WHAT WE DO</SectionLabel>
           <p>One studio. Four ways to move your brand forward.</p>
@@ -190,9 +191,9 @@ function Home() {
             </Link>
           ))}
         </div>
-      </section>
+        </section>
 
-      <section className="container home-intro section-block">
+        <section className="container home-intro section-block">
         <div className="home-intro-title">
           <SectionLabel>THE IMPCO APPROACH</SectionLabel>
           <h2>NOT JUST<br /><span>ANOTHER</span><br />AGENCY.</h2>
@@ -206,9 +207,9 @@ function Home() {
           </div>
           <Link className="text-link" to="/#about">More about IMPCO <ArrowRight size={16} /></Link>
         </div>
-      </section>
+        </section>
 
-      <section className="container home-work section-block">
+        <section className="container home-work section-block">
         <div className="home-work-head">
           <div>
             <SectionLabel>SELECTED WORK</SectionLabel>
@@ -224,9 +225,9 @@ function Home() {
             </Link>
           ))}
         </div>
-      </section>
+        </section>
 
-      <section id="about" className="home-about">
+        <section id="about" className="home-about">
         <div className="container home-about-grid">
           <div>
             <SectionLabel>ABOUT IMPCO</SectionLabel>
@@ -237,17 +238,19 @@ function Home() {
             <Link className="text-link" to="/#about">Start a conversation <ArrowRight size={16} /></Link>
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="cta-panel">
+        <section className="cta-panel">
         <div className="container cta-inner">
           <SectionLabel>HAVE AN IDEA?</SectionLabel>
           <h2>LET'S BUILD IT.</h2>
           <p>Tell us what you're planning, and we’ll help turn it into a sharper digital experience.</p>
           <Buttons />
         </div>
-      </section>
-    </main>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }
 
