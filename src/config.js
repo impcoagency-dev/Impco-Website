@@ -9,11 +9,12 @@ export const config = {
   whatsapp: "447418320714",
   whatsappMessage: "Hello IMPCO, I would like to start a project.",
   socials: {
-    linkedin: "",
-    x: "",
-    threads: "",
+    linkedin: "https://www.linkedin.com/in/impcoagency/",
+    x: "https://x.com/iamidoal",
+    threads: "https://www.threads.net/@impcoagency",
     youtube: "",
-    instagram: ""
+    instagram: "https://www.instagram.com/impcoagency/",
+    tiktok: "https://www.tiktok.com/@impco.agency?lang=en"
   }
 };
 
