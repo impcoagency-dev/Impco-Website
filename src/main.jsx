@@ -478,7 +478,7 @@ function Web() {
           <SectionLabel>IMPCO AGENCY / WEB</SectionLabel>
           <h1><span>WEB</span> SOLUTIONS</h1>
           <p>Modern websites and digital products built for clarity, performance, and conversion.</p>
-          <div className="project-count">12 PROJECTS</div>
+          <div className="project-count">10 PROJECTS</div>
         </section>
 
         <section className="container web-grid section-block">

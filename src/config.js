@@ -56,15 +56,11 @@ export const images = {
     ["https://image.thum.io/get/width/1200/https://mecurybusinesssolutions.com/", "Mercury Business Solutions", "BUSINESS", "https://mecurybusinesssolutions.com/"],
     ["https://image.thum.io/get/width/1200/https://www.cor.de/", "COR.DE", "BRAND", "https://www.cor.de/"],
     ["https://image.thum.io/get/width/1200/https://flabelus.com/", "Flabelus", "LUXURY", "https://flabelus.com/"],
-    ["https://image.thum.io/get/width/1200/https://www.cricinfo.com/", "Cricinfo", "SPORTS", "https://www.cricinfo.com/"],
     ["https://image.thum.io/get/width/1200/https://www.kraken.com/", "Kraken", "FINANCE", "https://www.kraken.com/"],
     ["https://image.thum.io/get/width/1200/https://boopboopbeep.co.uk/shop/", "Boop Boop Beep", "E-COMMERCE", "https://boopboopbeep.co.uk/shop/"],
-    ["https://image.thum.io/get/width/1200/https://atomicwallet.io/buy-crypto", "Atomic Wallet Buy Crypto", "CRYPTO", "https://atomicwallet.io/buy-crypto"],
-    ["https://image.thum.io/get/width/1200/https://atomicwallet.io/", "Atomic Wallet", "CRYPTO", "https://atomicwallet.io/"],
     ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", "Virgin Voyages", "TRAVEL", "https://www.virginvoyages.com/"],
-    ["https://image.thum.io/get/width/1200/https://www.electronicexpress.com/", "Electronic Express", "RETAIL", "https://www.electronicexpress.com/"],
-    ["https://image.thum.io/get/width/1200/https://mktstore.co/", "MKT Store", "RETAIL", "https://mktstore.co/"],
     ["https://image.thum.io/get/width/1200/https://novauniversity.co/", "Nova University", "EDUCATION", "https://novauniversity.co/"],
+    ["https://image.thum.io/get/width/1200/https://www.electronicexpress.com/", "Electronic Express", "RETAIL", "https://www.electronicexpress.com/"],
     ["https://image.thum.io/get/width/1200/https://dagoexpress.com/en-gb/", "Dago Express", "LOGISTICS", "https://dagoexpress.com/en-gb/"]
   ],
   branding: [
