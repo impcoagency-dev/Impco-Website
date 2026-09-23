@@ -64,7 +64,9 @@ export const images = {
     ["https://image.thum.io/get/width/1200/https://www.virginvoyages.com/", "Virgin Voyages", "TRAVEL", "https://www.virginvoyages.com/"],
     ["https://image.thum.io/get/width/1200/https://www.electronicexpress.com/", "Electronic Express", "RETAIL", "https://www.electronicexpress.com/"],
     ["https://image.thum.io/get/width/1200/https://mktstore.co/", "MKT Store", "RETAIL", "https://mktstore.co/"],
-    ["https://image.thum.io/get/width/1200/https://www.hapag-lloyd.com/en/", "Hapag-Lloyd", "LOGISTICS", "https://www.hapag-lloyd.com/en/"]
+    ["https://image.thum.io/get/width/1200/https://novauniversity.co/", "Nova University", "EDUCATION", "https://novauniversity.co/"],
+    ["https://image.thum.io/get/width/1200/https://dagoexpress.com/en-gb/", "Dago Express", "LOGISTICS", "https://dagoexpress.com/en-gb/"],
+    ["https://image.thum.io/get/width/1200/https://www.designhotels.com/hotels/germany/", "Design Hotels Germany", "HOSPITALITY", "https://www.designhotels.com/hotels/germany/"]
   ],
   branding: [
     ["f9564d7478bfd0af28a1a650fad4091e8dfb64b1.jpg", "Noir Collective"],
