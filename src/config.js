@@ -52,18 +52,19 @@ export const images = {
     ["5c5f840e40611baf1daeab327f611ce0d708de4f.jpg", "Pulse Web Intelligence"]
   ],
   webProjects: [
-    ["69e9a639b5218976f03b00eaa3d6f3a048a02954.jpg", "Mercury Business Solutions", "WEBSITES"],
-    ["a0a10a40c626c98349ebd8bae844b4e308e61b16.jpg", "Nova University Community", "WEB APPS"],
-    ["e1e932f17005f0eb1fc91eb1f01de12cf2aace5d.jpg", "Aura Fashion Store", "E-COMMERCE"],
-    ["cbe8ecf428c219dcaa148777545768121250ca03.jpg", "Vortex SaaS Platform", "WEB APPS"],
-    ["b7ac090edee70ab0c3d689e7f49c4d522542c51c.jpg", "Pulse Finance App", "APPLICATIONS"],
-    ["846fbddf415f58542158044aae393ceaa44fabb3.jpg", "Lumen Architecture Studio", "WEBSITES"],
-    ["b456efd8b1491faa3cc5a6e3440f0c474ad27a1e.jpg", "Orbit AI Research Hub", "WEB APPS"],
-    ["5fdd6484664702d944d4cad1820b76ad1e614672.jpg", "Zenith Corporate Group", "WEBSITES"],
-    ["47334532207e12e9a4117f1e93f7f7cf6f8726a8.jpg", "Cascade E-Learning Platform", "APPLICATIONS"],
-    ["552ff1aae0bf60b78ae48c3efccb0f9c934e0463.jpg", "Terra Luxury Interiors", "E-COMMERCE"],
-    ["76ce13a05cbc9205dbf2a82e6d7d07d907c2a7fd.jpg", "Helix Biotech Labs", "WEBSITES"],
-    ["20c2a4daa8ed4242830681f4653c65eead4dc7da.jpg", "Flux Motion Studio", "OTHER"]
+    ["https://image.thum.io/get/width/1200/https://www.cipriani.com/", "Cipriani", "HOSPITALITY", "https://www.cipriani.com/"],
+    ["https://image.thum.io/get/width/1200/https://mecurybusinesssolutions.com/", "Mercury Business Solutions", "BUSINESS", "https://mecurybusinesssolutions.com/"],
+    ["https://image.thum.io/get/width/1200/https://www.cor.de/", "COR.DE", "BRAND", "https://www.cor.de/"],
+    ["https://image.thum.io/get/width/1200/https://flabelus.com/", "Flabelus", "LUXURY", "https://flabelus.com/"],
+    ["https://image.thum.io/get/width/1200/https://www.cricinfo.com/", "Cricinfo", "SPORTS", "https://www.cricinfo.com/"],
+    ["https://image.thum.io/get/width/1200/https://www.kraken.com/", "Kraken", "FINANCE", "https://www.kraken.com/"],
+    ["https://image.thum.io/get/width/1200/https://boopboopbeep.co.uk/shop/", "Boop Boop Beep", "E-COMMERCE", "https://boopboopbeep.co.uk/shop/"],
+    ["https://image.thum.io/get/width/1200/https://atomicwallet.io/buy-crypto", "Atomic Wallet Buy Crypto", "CRYPTO", "https://atomicwallet.io/buy-crypto"],
+    ["https://image.thum.io/get/width/1200/https://atomicwallet.io/", "Atomic Wallet", "CRYPTO", "https://atomicwallet.io/"],
+    ["https://image.thum.io/get/width/1200/https://www.virginvoyages.com/", "Virgin Voyages", "TRAVEL", "https://www.virginvoyages.com/"],
+    ["https://image.thum.io/get/width/1200/https://www.electronicexpress.com/", "Electronic Express", "RETAIL", "https://www.electronicexpress.com/"],
+    ["https://image.thum.io/get/width/1200/https://mktstore.co/", "MKT Store", "RETAIL", "https://mktstore.co/"],
+    ["https://image.thum.io/get/width/1200/https://www.hapag-lloyd.com/en/", "Hapag-Lloyd", "LOGISTICS", "https://www.hapag-lloyd.com/en/"]
   ],
   branding: [
     ["f9564d7478bfd0af28a1a650fad4091e8dfb64b1.jpg", "Noir Collective"],

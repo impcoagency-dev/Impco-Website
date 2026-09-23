@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X, Youtube } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, Music2, X, Youtube } from "lucide-react";
 import { config, images, A, wa, gmail } from "./config";
 import "./styles.css";
 
@@ -107,6 +107,9 @@ function Footer() {
             </a>
             <a aria-label="Threads" href={config.socials.threads || "#"} target={config.socials.threads ? "_blank" : undefined} rel={config.socials.threads ? "noreferrer" : undefined} className={!config.socials.threads ? "unconfigured" : ""}>
               <span className="threads-mark">@</span>
+            </a>
+            <a aria-label="TikTok" href={config.socials.tiktok || "#"} target={config.socials.tiktok ? "_blank" : undefined} rel={config.socials.tiktok ? "noreferrer" : undefined} className={!config.socials.tiktok ? "unconfigured" : ""}>
+              <Music2 size={16} />
             </a>
             <a aria-label="YouTube" href={config.socials.youtube || "#"} target={config.socials.youtube ? "_blank" : undefined} rel={config.socials.youtube ? "noreferrer" : undefined} className={!config.socials.youtube ? "unconfigured" : ""}>
               <Youtube size={16} />
@@ -479,13 +482,15 @@ function Web() {
         </section>
 
         <section className="container web-grid section-block">
-          {images.webProjects.map(([image, title, tag], index) => (
+          {images.webProjects.map(([image, title, tag, link], index) => (
             <article key={title} className={index === 0 || index === 3 || index === 8 ? "wide" : ""}>
-              <img src={A + image} alt={title} loading="lazy" />
+              <a href={link} target="_blank" rel="noreferrer">
+                <img src={image.startsWith("http") ? image : A + image} alt={title} loading="lazy" />
+              </a>
               <div className="web-info">
                 <span>{tag}</span>
                 <h3>{title}</h3>
-                <a href={wa()} target="_blank" rel="noreferrer">Visit Website <ArrowRight size={14} /></a>
+                <a href={link} target="_blank" rel="noreferrer">Visit Website <ArrowRight size={14} /></a>
               </div>
             </article>
           ))}
