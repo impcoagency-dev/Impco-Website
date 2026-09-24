@@ -1028,8 +1028,7 @@ button {
 }
 
 .brand-hero {
-  background: linear-gradient(90deg, rgba(8, 12, 18, 0.9), rgba(8, 12, 18, 0.45)),
-    url('/assets/Branding Prototype.png') center/cover no-repeat;
+  background: linear-gradient(90deg, rgba(8, 12, 18, 0.9), rgba(8, 12, 18, 0.45));
   border-bottom: 1px solid var(--line);
 }
 
