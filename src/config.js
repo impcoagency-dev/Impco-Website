@@ -20,7 +20,7 @@ export const config = {
 
 export const wa = () => `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(config.whatsappMessage)}`;
 export const mail = () => `mailto:${config.managementEmail}?subject=${encodeURIComponent("Project enquiry for IMPCO Agency")}&body=${encodeURIComponent("Hello IMPCO Agency,\n\nI would like to discuss a project.")}`;
-export const gmail = () => `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(config.managementEmail)}&su=${encodeURIComponent("Project enquiry for IMPCO Agency")}&body=${encodeURIComponent("Hello IMPCO Agency,\n\nI would like to discuss a project.")}`;
+export const gmail = () => mail();
 
 export const A = "/assets/";
 export const images = {
@@ -28,8 +28,8 @@ export const images = {
   homeFeature: "Home Page.png",
   homeProjects: [
     ["Character 01.jpg", "3D Designs & Animations", "3D"],
-    ["AI solutions page.png", "AI Customer Platform", "AI"],
-    ["Web solution page.png", "E-Commerce Experience", "WEB"],
+    ["https://images.moneycontrol.com/static-mcnews/2024/02/BeFunky-collage-2024-02-19T175936.187.jpg", "AI Customer Platform", "AI"],
+    ["https://www.entreprise20.fr/wp-content/uploads/2020/06/vid%C3%A9o-et-photo-e-commerce-1536x1024.jpg", "E-Commerce Experience", "WEB"],
     ["Branding Prototype.png", "Brand Identity System", "BRANDING"],
     ["3D solution Page.png", "Architectural Visualization", "3D"],
     ["Home Page.png", "Interactive Web App", "WEB"]

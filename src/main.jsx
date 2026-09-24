@@ -223,7 +223,7 @@ function Home() {
         <div className="home-work-grid">
           {images.homeProjects.slice(0, 4).map(([image, title, tag], index) => (
             <Link className={`home-work-card work-${index + 1}`} to={tag === "3D" ? "/3d" : tag === "AI" ? "/ai" : tag === "WEB" ? "/web" : "/branding"} key={title}>
-              <img src={A + image} alt={title} loading="lazy" />
+              <img src={image.startsWith("http") ? image : A + image} alt={title} loading="lazy" />
               <div className="home-work-caption"><span>{tag}</span><strong>{title}</strong><ArrowUpRight size={18} /></div>
             </Link>
           ))}
