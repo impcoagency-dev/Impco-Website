@@ -135,7 +135,17 @@ export default async function handler(req, res) {
 
   const origin = req.headers.origin;
   const allowedOrigin = process.env.SITE_ORIGIN || "https://impcoagency.agency";
-  if (origin && origin !== allowedOrigin) {
+  const allowedOrigins = new Set([allowedOrigin]);
+  try {
+    const hostname = new URL(allowedOrigin).hostname.replace(/^www\./, "");
+    if (hostname === "impcoagency.agency") {
+      allowedOrigins.add(`https://${hostname}`);
+      allowedOrigins.add(`https://www.${hostname}`);
+    }
+  } catch {
+    return response(res, 500, { error: "Invalid site origin configuration" });
+  }
+  if (origin && !allowedOrigins.has(origin)) {
     return response(res, 403, { error: "Forbidden" });
   }
 

@@ -32,10 +32,10 @@ function createResponse() {
   };
 }
 
-function createRequest(body, ip) {
+function createRequest(body, ip, origin = "https://impcoagency.agency") {
   return {
     method: "POST",
-    headers: { origin: "https://impcoagency.agency", "x-forwarded-for": ip },
+    headers: { origin, "x-forwarded-for": ip },
     body
   };
 }
@@ -164,5 +164,32 @@ test("does not contact Brevo when server configuration is missing", async () => 
   const res = createResponse();
   await handler(createRequest(validLead(), "192.0.2.15"), res);
   assert.equal(res.statusCode, 503);
+  assert.equal(called, false);
+});
+
+test("accepts enquiries from the www site origin", async () => {
+  process.env.BREVO_API_KEY = "test-key";
+  let called = false;
+  globalThis.fetch = async () => {
+    called = true;
+    return { ok: true, status: 201, json: async () => ({}) };
+  };
+
+  const res = createResponse();
+  await handler(createRequest(validLead({ consent: false }), "192.0.2.18", "https://www.impcoagency.agency"), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(called, true);
+});
+
+test("rejects project enquiries from untrusted origins", async () => {
+  let called = false;
+  globalThis.fetch = async () => {
+    called = true;
+    return { ok: true, status: 201, json: async () => ({}) };
+  };
+
+  const res = createResponse();
+  await handler(createRequest(validLead(), "192.0.2.19", "https://example.com"), res);
+  assert.equal(res.statusCode, 403);
   assert.equal(called, false);
 });
