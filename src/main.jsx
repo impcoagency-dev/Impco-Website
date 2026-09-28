@@ -12,7 +12,7 @@ const nav = [
   ["WEB", "/web"],
   ["BRANDING", "/branding"],
   ["ABOUT", "/#about"],
-  ["CONTACT", null]
+  ["CONTACT", "/contact"]
 ];
 
 function Header() {
@@ -38,14 +38,6 @@ function Header() {
 
         <nav className={`main-nav ${open ? "open" : ""}`}>
           {nav.map(([label, href]) => {
-            if (!href) {
-              return (
-                <a key={label} href={gmail()} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
-                  {label}
-                </a>
-              );
-            }
-
             const isActive =
               href === "/"
                 ? location === "/"
@@ -61,9 +53,9 @@ function Header() {
           })}
         </nav>
 
-        <a className="header-button" href={wa()} target="_blank" rel="noreferrer">
+        <Link className="header-button" to="/contact">
           START A PROJECT <ArrowRight size={14} />
-        </a>
+        </Link>
       </div>
     </header>
   );
@@ -86,7 +78,6 @@ function Footer() {
           <h4>NAVIGATION</h4>
           <div className="footer-links">
             {nav.map(([label, href]) => {
-              if (!href) return null;
               return (
                 <a key={label} href={href}>
                   {label}
@@ -124,9 +115,9 @@ function Footer() {
             <a href={wa()} target="_blank" rel="noreferrer">+44 7418 320714</a>
           </div>
 
-          <a className="mini-button" href={wa()} target="_blank" rel="noreferrer">
+          <Link className="mini-button" to="/contact">
             START A PROJECT <ArrowRight size={12} />
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -145,15 +136,220 @@ function SectionLabel({ children }) {
   return <div className="section-label"><span></span>{children}</div>;
 }
 
+const serviceOptions = [
+  ["WEB", "Web Development"],
+  ["AI", "AI Solutions"],
+  ["3D", "3D / Visualization"],
+  ["BRANDING", "Branding"],
+  ["OTHER", "Other"]
+];
+
+function Contact() {
+  const [values, setValues] = React.useState({
+    name: "",
+    email: "",
+    company: "",
+    interests: [],
+    projectDescription: "",
+    budget: "",
+    consent: false,
+    website: ""
+  });
+  const [errors, setErrors] = React.useState({});
+  const [status, setStatus] = React.useState(() => new URLSearchParams(window.location.search).get("confirmed") === "1" ? "success" : "idle");
+
+  const update = (field, value) => {
+    setValues((current) => ({ ...current, [field]: value }));
+    setErrors((current) => ({ ...current, [field]: "", form: "" }));
+  };
+
+  const toggleInterest = (interest) => {
+    const interests = values.interests.includes(interest)
+      ? values.interests.filter((item) => item !== interest)
+      : [...values.interests, interest];
+    update("interests", interests);
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!values.name.trim()) nextErrors.name = "Please enter your name.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email.trim())) {
+      nextErrors.email = "Please enter a valid business email address.";
+    }
+    if (values.interests.length === 0) nextErrors.interests = "Please choose at least one area of interest.";
+    if (!values.consent) nextErrors.consent = "Please agree before submitting.";
+    if (values.name.length > 100) nextErrors.name = "Please keep your name under 100 characters.";
+    if (values.email.length > 254) nextErrors.email = "Please enter a shorter email address.";
+    if (values.company.length > 120) nextErrors.company = "Please keep your company name under 120 characters.";
+    if (values.projectDescription.length > 2000) nextErrors.projectDescription = "Please keep your description under 2,000 characters.";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const submit = async (event) => {
+    event.preventDefault();
+    if (!validate()) return;
+
+    setStatus("sending");
+    setErrors({});
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values)
+      });
+      if (!response.ok) throw new Error("Request failed");
+      setStatus("pending");
+    } catch {
+      setStatus("error");
+      setErrors({ form: "Something went wrong. Please try again or contact us directly." });
+    }
+  };
+
+  return (
+    <div className="page-shell contact-page">
+      <section className="container contact-layout">
+        <div className="contact-intro">
+          <SectionLabel>IMPCO / START A PROJECT</SectionLabel>
+          <p className="contact-disciplines">3D <span>·</span> WEB <span>·</span> AI <span>·</span> BRANDING</p>
+          <h1>Let's Build<br /><em>Something</em><br />Extraordinary</h1>
+          <p className="contact-support">Tell us what you're working on. We'll show you how Impcoagency can turn your idea into a powerful digital experience.</p>
+          <div className="contact-rule"><span>01</span><span>CREATIVE THINKING, BUILT TO WORK.</span></div>
+        </div>
+
+        <div className="contact-form-wrap">
+          {status === "success" ? (
+            <div className="contact-success" role="status" aria-live="polite">
+              <span className="success-mark" aria-hidden="true">✓</span>
+              <p className="contact-eyebrow">MESSAGE RECEIVED</p>
+              <h2>You're on the list. 🚀</h2>
+              <p>Thanks for reaching out to Impcoagency. We'll be in touch soon.</p>
+            </div>
+          ) : status === "pending" ? (
+            <div className="contact-success" role="status" aria-live="polite">
+              <span className="success-mark" aria-hidden="true">✓</span>
+              <p className="contact-eyebrow">ONE LAST STEP</p>
+              <h2>Check your inbox.</h2>
+              <p>We've sent you a confirmation link. Once you confirm your email, you'll be on the list.</p>
+            </div>
+          ) : (
+            <form className="contact-form" onSubmit={submit} noValidate>
+              <div className="contact-form-heading">
+                <span>LET'S TALK</span>
+                <span>01 <i>/</i> 01</span>
+              </div>
+
+              <div className="contact-fields-row">
+                <div className="contact-field">
+                  <label htmlFor="lead-name">Name <span>*</span></label>
+                  <input id="lead-name" name="name" autoComplete="name" maxLength={100} value={values.name} onChange={(event) => update("name", event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "lead-name-error" : undefined} />
+                  {errors.name && <span className="field-error" id="lead-name-error">{errors.name}</span>}
+                </div>
+                <div className="contact-field">
+                  <label htmlFor="lead-email">Business Email <span>*</span></label>
+                  <input id="lead-email" name="email" type="email" autoComplete="email" maxLength={254} value={values.email} onChange={(event) => update("email", event.target.value)} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "lead-email-error" : undefined} />
+                  {errors.email && <span className="field-error" id="lead-email-error">{errors.email}</span>}
+                </div>
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="lead-company">Company <span className="optional">OPTIONAL</span></label>
+                <input id="lead-company" name="company" autoComplete="organization" maxLength={120} value={values.company} onChange={(event) => update("company", event.target.value)} aria-invalid={Boolean(errors.company)} aria-describedby={errors.company ? "lead-company-error" : undefined} />
+                {errors.company && <span className="field-error" id="lead-company-error">{errors.company}</span>}
+              </div>
+
+              <fieldset className="contact-interest-set" aria-describedby={errors.interests ? "lead-interests-error" : undefined}>
+                <legend>What can we help you create? <span>*</span></legend>
+                <div className="interest-options">
+                  {serviceOptions.map(([value, label]) => (
+                    <label className={`interest-option ${values.interests.includes(value) ? "selected" : ""}`} key={value}>
+                      <input type="checkbox" name="interests" value={value} checked={values.interests.includes(value)} onChange={() => toggleInterest(value)} />
+                      <span className="interest-check" aria-hidden="true"></span>
+                      {label}
+                    </label>
+                  ))}
+                </div>
+                {errors.interests && <span className="field-error" id="lead-interests-error">{errors.interests}</span>}
+              </fieldset>
+
+              <div className="contact-field">
+                <label htmlFor="lead-project">Tell us a little about your project <span className="optional">OPTIONAL</span></label>
+                <textarea id="lead-project" name="projectDescription" rows="3" maxLength={2000} placeholder="What are you trying to create, improve, launch, or visualize?" value={values.projectDescription} onChange={(event) => update("projectDescription", event.target.value)} aria-invalid={Boolean(errors.projectDescription)} aria-describedby={errors.projectDescription ? "lead-project-error" : undefined} />
+                {errors.projectDescription && <span className="field-error" id="lead-project-error">{errors.projectDescription}</span>}
+              </div>
+
+              <div className="contact-field contact-budget-field">
+                <label htmlFor="lead-budget">Estimated project budget <span className="optional">OPTIONAL</span></label>
+                <select id="lead-budget" name="budget" value={values.budget} onChange={(event) => update("budget", event.target.value)}>
+                  <option value="">Choose a range</option>
+                  <option value="Not sure yet">Not sure yet</option>
+                  <option value="Under $1,000">Under $1,000</option>
+                  <option value="$1,000 – $3,000">$1,000 – $3,000</option>
+                  <option value="$3,000 – $10,000">$3,000 – $10,000</option>
+                  <option value="$10,000+">$10,000+</option>
+                </select>
+              </div>
+
+              <div className="consent-row">
+                <input id="lead-consent" name="consent" type="checkbox" checked={values.consent} onChange={(event) => update("consent", event.target.checked)} aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? "lead-consent-error" : undefined} />
+                <label htmlFor="lead-consent">I agree to receive emails from Impcoagency about services, insights, updates, and relevant offers. I understand I can unsubscribe at any time. <Link to="/privacy">Privacy Policy</Link></label>
+              </div>
+              {errors.consent && <span className="field-error consent-error" id="lead-consent-error">{errors.consent}</span>}
+
+              <div className="contact-trap" aria-hidden="true">
+                <label htmlFor="lead-website">Leave this field empty</label>
+                <input id="lead-website" name="website" tabIndex={-1} autoComplete="off" value={values.website} onChange={(event) => update("website", event.target.value)} />
+              </div>
+
+              {errors.form && <p className="form-error" role="alert">{errors.form}</p>}
+              <button className="contact-submit" type="submit" disabled={status === "sending"}>
+                {status === "sending" ? "Sending..." : "Start a Project"}
+                {status !== "sending" && <ArrowRight size={17} />}
+              </button>
+              <p className="contact-note">No spam. Just useful ideas, updates, and opportunities to work together.</p>
+              <p className="contact-doi-note">We'll email you a confirmation link before adding you to our updates.</p>
+            </form>
+          )}
+        </div>
+      </section>
+      <section className="home-signup contact-signup">
+        <div className="container home-signup-inner">
+          <div className="home-signup-copy">
+            <SectionLabel>IMPCO / UPDATES</SectionLabel>
+            <h2>Stay Connected<br /><span>With IMPCOAGENCY</span></h2>
+            <p>Get selected updates, new 3D work, creative projects and opportunities from IMPCOAGENCY.</p>
+            <p className="signup-disciplines">TECHNOLOGY <span>•</span> CREATIVE <span>•</span> AI <span>•</span> 3D</p>
+          </div>
+          <div className="brevo-form-container">
+            <iframe
+              className="brevo-signup-embed"
+              title="IMPCO Agency email signup form"
+              src="https://1b069c9c.sibforms.com/v2/serve/MUIFAI9gs55vSAuANUqrHySkla01C9ZaerqEKY0zcCKIrQhge_A_3JgqtxZFkhPzmdbsOrr2iQd1ohStJPTtUmEEeuooPJs-hNECNaoVdl7BbBn8Mf6abjMRKMgd14eszNsKFdRCxb4jVPPHBFgYfnCl5H_LJABfe-OIZU3b5vkJ9S8Pm4hfKjDYsoQgwMjwgaN1XzujYhwg5tA0-Q=="
+              width="540"
+              height="305"
+              frameBorder="0"
+              scrolling="auto"
+              allowFullScreen
+              style={{ display: "block", marginLeft: "auto", marginRight: "auto", maxWidth: "100%" }}
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+      <Footer />
+    </div>
+  );
+}
+
 function Buttons({ accent = false }) {
   return (
     <div className="button-row">
-      <a className={accent ? "button button-primary button-accent" : "button button-primary"} href={wa()} target="_blank" rel="noreferrer">
+      <Link className={accent ? "button button-primary button-accent" : "button button-primary"} to="/contact">
         Start a Project <ArrowRight size={16} />
-      </a>
-      <a className="button button-secondary" href={gmail()} target="_blank" rel="noreferrer">
+      </Link>
+      <Link className="button button-secondary" to="/contact">
         Contact Us <ArrowRight size={16} />
-      </a>
+      </Link>
     </div>
   );
 }
@@ -250,6 +446,30 @@ function Home() {
           <p>Tell us what you're planning, and we’ll help turn it into a sharper digital experience.</p>
           <Buttons />
         </div>
+        </section>
+
+        <section className="home-signup">
+          <div className="container home-signup-inner">
+            <div className="home-signup-copy">
+              <SectionLabel>IMPCO / UPDATES</SectionLabel>
+              <h2>GOOD IDEAS<br /><span>IN YOUR INBOX.</span></h2>
+              <p>Get occasional updates, insights, and ideas from the IMPCO studio.</p>
+            </div>
+            <div className="brevo-form-container">
+              <iframe
+                className="brevo-signup-embed"
+                title="IMPCO Agency email signup form"
+                src="https://1b069c9c.sibforms.com/v2/serve/MUIFAI9gs55vSAuANUqrHySkla01C9ZaerqEKY0zcCKIrQhge_A_3JgqtxZFkhPzmdbsOrr2iQd1ohStJPTtUmEEeuooPJs-hNECNaoVdl7BbBn8Mf6abjMRKMgd14eszNsKFdRCxb4jVPPHBFgYfnCl5H_LJABfe-OIZU3b5vkJ9S8Pm4hfKjDYsoQgwMjwgaN1XzujYhwg5tA0-Q=="
+                width="540"
+                height="305"
+                frameBorder="0"
+                scrolling="auto"
+                allowFullScreen
+                style={{ display: "block", marginLeft: "auto", marginRight: "auto", maxWidth: "100%" }}
+                loading="lazy"
+              />
+            </div>
+          </div>
         </section>
       </main>
       <Footer />
@@ -554,9 +774,9 @@ function Legal({ type }) {
       {privacy ? (
         <>
           <h2>1. Information We Collect</h2>
-          <p>When you contact IMPCO Agency, we may receive the information you choose to provide, such as your name, email address, phone number, company details and project requirements. Our website may also process basic technical information needed to operate and secure the site.</p>
-          <h2>2. How We Use Information</h2>
-          <p>We use information to respond to enquiries, discuss and deliver services, communicate about projects, improve our website and maintain security. We do not sell personal information.</p>
+          <p>When you contact IMPCO Agency, we may receive the information you choose to provide, such as your name, email address, company details and project requirements. Our website may also process basic technical information needed to operate and secure the site.</p>
+          <h2>2. How We Use and Share Information</h2>
+          <p>We use information to respond to enquiries, discuss and deliver services, communicate about projects, improve our website and maintain security. If you check the marketing consent box on our project form, we use Brevo to send a confirmation email and, only after you confirm, relevant services, insights, updates and offers. You can unsubscribe at any time. We do not sell personal information.</p>
           <h2>3. Email, WhatsApp and Social Links</h2>
           <p>When you choose to contact us by email, WhatsApp or a social platform, you leave this website and use that provider's service. Their own privacy policies and terms apply to information handled by those services.</p>
           <h2>4. Cookies and Analytics</h2>
@@ -600,6 +820,7 @@ function App() {
         <Route path="/ai" element={<AI />} />
         <Route path="/web" element={<Web />} />
         <Route path="/branding" element={<Branding />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/privacy" element={<><Legal type="privacy" /><Footer /></>} />
         <Route path="/terms" element={<><Legal type="terms" /><Footer /></>} />
       </Routes>
