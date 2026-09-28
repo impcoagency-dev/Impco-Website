@@ -156,7 +156,7 @@ function Contact() {
     website: ""
   });
   const [errors, setErrors] = React.useState({});
-  const [status, setStatus] = React.useState(() => new URLSearchParams(window.location.search).get("confirmed") === "1" ? "success" : "idle");
+  const [status, setStatus] = React.useState(() => new URLSearchParams(window.location.search).get("confirmed") === "1" ? "subscribed" : "idle");
 
   const update = (field, value) => {
     setValues((current) => ({ ...current, [field]: value }));
@@ -217,7 +217,14 @@ function Contact() {
         </div>
 
         <div className="contact-form-wrap">
-          {status === "success" ? (
+          {status === "subscribed" ? (
+            <div className="contact-success" role="status" aria-live="polite">
+              <span className="success-mark" aria-hidden="true">✓</span>
+              <p className="contact-eyebrow">SUBSCRIPTION CONFIRMED</p>
+              <h2>You're on the list.</h2>
+              <p>Thanks for confirming your email. You can unsubscribe from updates at any time.</p>
+            </div>
+          ) : status === "success" ? (
             <div className="contact-success" role="status" aria-live="polite">
               <span className="success-mark" aria-hidden="true">✓</span>
               <p className="contact-eyebrow">MESSAGE RECEIVED</p>
