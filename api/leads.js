@@ -46,6 +46,50 @@ async function brevoRequest(path, apiKey, options = {}) {
   return body;
 }
 
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+function createNotification(name, email, company, interests, projectDescription, budget) {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeCompany = escapeHtml(company || "Not provided");
+  const safeInterests = escapeHtml(interests.join(", "));
+  const safeDescription = escapeHtml(projectDescription || "Not provided").replace(/\n/g, "<br>");
+  const safeBudget = escapeHtml(budget || "Not provided");
+
+  return {
+    sender: { name: "IMPCO AGENCY", email: "contact@impcoagency.agency" },
+    to: [{ email: "contact@impcoagency.agency", name: "IMPCO AGENCY" }],
+    replyTo: { email, name },
+    subject: `New project enquiry from ${name}`,
+    textContent: [
+      "New project enquiry",
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Company: ${company || "Not provided"}`,
+      `Areas of interest: ${interests.join(", ")}`,
+      `Budget: ${budget || "Not provided"}`,
+      `Project details: ${projectDescription || "Not provided"}`
+    ].join("\n"),
+    htmlContent: [
+      "<h1>New project enquiry</h1>",
+      `<p><strong>Name:</strong> ${safeName}</p>`,
+      `<p><strong>Email:</strong> ${safeEmail}</p>`,
+      `<p><strong>Company:</strong> ${safeCompany}</p>`,
+      `<p><strong>Areas of interest:</strong> ${safeInterests}</p>`,
+      `<p><strong>Budget:</strong> ${safeBudget}</p>`,
+      `<p><strong>Project details:</strong><br>${safeDescription}</p>`
+    ].join("")
+  };
+}
+
 async function getLeadList(apiKey) {
   const listId = Number(process.env.BREVO_LIST_ID);
   if (Number.isSafeInteger(listId) && listId > 0) return listId;
@@ -127,39 +171,51 @@ export default async function handler(req, res) {
     : [];
   const budgets = new Set(["", "Not sure yet", "Under $1,000", "$1,000 – $3,000", "$3,000 – $10,000", "$10,000+"]);
 
-  if (!name || !email || !EMAIL_PATTERN.test(email) || !interests.length || body.consent !== true || !budgets.has(budget)) {
+  if (!name || !email || !EMAIL_PATTERN.test(email) || !interests.length || !budgets.has(budget)) {
     return response(res, 400, { error: "Please check the required fields and try again." });
   }
 
   const apiKey = process.env.BREVO_API_KEY;
   const templateId = Number(process.env.BREVO_DOI_TEMPLATE_ID);
   const siteOrigin = (process.env.SITE_ORIGIN || "https://impcoagency.agency").replace(/\/$/, "");
-  if (!apiKey || !Number.isSafeInteger(templateId) || templateId < 1) {
+  if (!apiKey) {
     return response(res, 503, { error: "Lead form is not configured" });
   }
 
   try {
-    const listId = await getLeadList(apiKey);
-    await brevoRequest("/contacts/doubleOptinConfirmation", apiKey, {
+    await brevoRequest("/smtp/email", apiKey, {
       method: "POST",
-      body: JSON.stringify({
-        email,
-        includeListIds: [listId],
-        templateId,
-        redirectionUrl: `${siteOrigin}/contact?confirmed=1`,
-        attributes: {
-          FIRSTNAME: name,
-          COMPANY: company,
-          INTERESTS: interests,
-          PROJECT_DESCRIPTION: projectDescription,
-          BUDGET: budget,
-          MARKETING_CONSENT: true
-        }
-      })
+      body: JSON.stringify(createNotification(name, email, company, interests, projectDescription, budget))
     });
+
+    if (body.consent === true && Number.isSafeInteger(templateId) && templateId > 0) {
+      try {
+        const listId = await getLeadList(apiKey);
+        await brevoRequest("/contacts/doubleOptinConfirmation", apiKey, {
+          method: "POST",
+          body: JSON.stringify({
+            email,
+            includeListIds: [listId],
+            templateId,
+            redirectionUrl: `${siteOrigin}/contact?confirmed=1`,
+            attributes: {
+              FIRSTNAME: name,
+              COMPANY: company,
+              INTERESTS: interests,
+              PROJECT_DESCRIPTION: projectDescription,
+              BUDGET: budget,
+              MARKETING_CONSENT: true
+            }
+          })
+        });
+      } catch (error) {
+        console.error("Brevo marketing opt-in failed", error.status || "unknown status");
+      }
+    }
+
     return response(res, 200, { ok: true });
   } catch (error) {
-    console.error("Brevo lead submission failed", error.status || "unknown status");
+    console.error("Brevo project notification failed", error.status || "unknown status");
     return response(res, 502, { error: "Unable to process submission" });
   }
 }

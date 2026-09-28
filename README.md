@@ -29,12 +29,12 @@ The About section is linked from the header. Project and Contact links open the 
 
 ## Brevo lead form deployment
 
-The `/contact` form posts to the Vercel serverless function in `api/leads.js`. The function validates submissions on the server and calls Brevo's double-opt-in confirmation endpoint. The browser never receives the Brevo API key. Visitors are added to `Impcoagency Website Leads` only after confirming from Brevo's email; the confirmation redirects to `/contact?confirmed=1`.
+The `/contact` form posts to the Vercel serverless function in `api/leads.js`. The function validates submissions on the server and sends project details to `contact@impcoagency.agency` through Brevo transactional email. The browser shows its received confirmation only after Brevo accepts that notification. The `contact@impcoagency.agency` sender must be verified in Brevo. Marketing consent is optional; opted-in visitors are added to `Impcoagency Website Leads` only after confirming from Brevo's double-opt-in email. The confirmation redirects to `/contact?confirmed=1`.
 
 Configure these variables in the Vercel project settings for Production (and Preview if needed):
 
 - `BREVO_API_KEY`: a private Brevo API v3 key. Never use a `VITE_` prefix.
-- `BREVO_DOI_TEMPLATE_ID`: the numeric ID of a published Double Opt-In template in Brevo.
+- `BREVO_DOI_TEMPLATE_ID`: the numeric ID of a published Double Opt-In template in Brevo. Required only to process optional marketing consent.
 - `SITE_ORIGIN`: the canonical HTTPS origin, such as `https://impcoagency.agency`.
 - `BREVO_FOLDER_ID`: a valid Brevo contact folder ID, required only if the dedicated list does not already exist and must be created by the function.
 - `BREVO_LIST_ID`: optional numeric ID of the dedicated `Impcoagency Website Leads` list. When set, it is used directly; otherwise the function searches by exact list name and creates the list in `BREVO_FOLDER_ID` only if absent.
@@ -47,7 +47,7 @@ Create or verify these contact attributes in Brevo before going live. `FIRSTNAME
 - `BUDGET`: normal text
 - `MARKETING_CONSENT`: normal boolean
 
-The DOI template must be active, contain Brevo's confirmation link, and be configured to redirect to the URL sent by the function. Review and publish it in Brevo, then set its ID as `BREVO_DOI_TEMPLATE_ID`. The hosting account must deploy Vercel Functions; a static-only export or host without function support will not process form submissions. A lightweight in-memory IP throttle is included, but for a scaled deployment replace it with a shared rate-limit store such as Vercel Firewall or a KV service.
+Verify `contact@impcoagency.agency` as a sender in Brevo and enable transactional email for the API key. The DOI template is optional; when used, it must be active, contain Brevo's confirmation link, and be configured to redirect to the URL sent by the function. Review and publish it in Brevo, then set its ID as `BREVO_DOI_TEMPLATE_ID`. The hosting account must deploy Vercel Functions; a static-only export or host without function support will not process form submissions. A lightweight in-memory IP throttle is included, but for a scaled deployment replace it with a shared rate-limit store such as Vercel Firewall or a KV service.
 
 ### Local testing
 

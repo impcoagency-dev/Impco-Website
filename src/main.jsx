@@ -177,7 +177,6 @@ function Contact() {
       nextErrors.email = "Please enter a valid business email address.";
     }
     if (values.interests.length === 0) nextErrors.interests = "Please choose at least one area of interest.";
-    if (!values.consent) nextErrors.consent = "Please agree before submitting.";
     if (values.name.length > 100) nextErrors.name = "Please keep your name under 100 characters.";
     if (values.email.length > 254) nextErrors.email = "Please enter a shorter email address.";
     if (values.company.length > 120) nextErrors.company = "Please keep your company name under 120 characters.";
@@ -199,7 +198,7 @@ function Contact() {
         body: JSON.stringify(values)
       });
       if (!response.ok) throw new Error("Request failed");
-      setStatus("pending");
+      setStatus("success");
     } catch {
       setStatus("error");
       setErrors({ form: "Something went wrong. Please try again or contact us directly." });
@@ -222,15 +221,8 @@ function Contact() {
             <div className="contact-success" role="status" aria-live="polite">
               <span className="success-mark" aria-hidden="true">✓</span>
               <p className="contact-eyebrow">MESSAGE RECEIVED</p>
-              <h2>You're on the list. 🚀</h2>
-              <p>Thanks for reaching out to Impcoagency. We'll be in touch soon.</p>
-            </div>
-          ) : status === "pending" ? (
-            <div className="contact-success" role="status" aria-live="polite">
-              <span className="success-mark" aria-hidden="true">✓</span>
-              <p className="contact-eyebrow">ONE LAST STEP</p>
-              <h2>Check your inbox.</h2>
-              <p>We've sent you a confirmation link. Once you confirm your email, you'll be on the list.</p>
+              <h2>Message received.</h2>
+              <p>Thanks for sharing your project with IMPCOAGENCY. Our team has received your details and will reach out shortly.</p>
             </div>
           ) : (
             <form className="contact-form" onSubmit={submit} noValidate>
@@ -291,10 +283,9 @@ function Contact() {
               </div>
 
               <div className="consent-row">
-                <input id="lead-consent" name="consent" type="checkbox" checked={values.consent} onChange={(event) => update("consent", event.target.checked)} aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? "lead-consent-error" : undefined} />
-                <label htmlFor="lead-consent">I agree to receive emails from Impcoagency about services, insights, updates, and relevant offers. I understand I can unsubscribe at any time. <Link to="/privacy">Privacy Policy</Link></label>
+                <input id="lead-consent" name="consent" type="checkbox" checked={values.consent} onChange={(event) => update("consent", event.target.checked)} />
+                <label htmlFor="lead-consent">I agree to receive emails from Impcoagency about services, insights, updates, and relevant offers. I understand I can unsubscribe at any time. <span className="optional">OPTIONAL</span> <Link to="/privacy">Privacy Policy</Link></label>
               </div>
-              {errors.consent && <span className="field-error consent-error" id="lead-consent-error">{errors.consent}</span>}
 
               <div className="contact-trap" aria-hidden="true">
                 <label htmlFor="lead-website">Leave this field empty</label>
@@ -306,8 +297,7 @@ function Contact() {
                 {status === "sending" ? "Sending..." : "Start a Project"}
                 {status !== "sending" && <ArrowRight size={17} />}
               </button>
-              <p className="contact-note">No spam. Just useful ideas, updates, and opportunities to work together.</p>
-              <p className="contact-doi-note">We'll email you a confirmation link before adding you to our updates.</p>
+              <p className="contact-note">Your project enquiry goes directly to our team. Marketing emails are only sent if you opt in above.</p>
             </form>
           )}
         </div>

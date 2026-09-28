@@ -54,10 +54,48 @@ function validLead(overrides = {}) {
   };
 }
 
-test("rejects missing marketing consent on the server", async () => {
+test("emails the project details without requiring marketing consent", async () => {
+  process.env.BREVO_API_KEY = "test-key";
+  let requestUrl;
+  let requestBody;
+  globalThis.fetch = async (url, options) => {
+    requestUrl = url;
+    requestBody = JSON.parse(options.body);
+    return { ok: true, status: 201, json: async () => ({}) };
+  };
+
   const res = createResponse();
   await handler(createRequest(validLead({ consent: false }), "192.0.2.10"), res);
-  assert.equal(res.statusCode, 400);
+  assert.equal(res.statusCode, 200);
+  assert.equal(requestUrl, "https://api.brevo.com/v3/smtp/email");
+  assert.equal(requestBody.to[0].email, "contact@impcoagency.agency");
+  assert.equal(requestBody.replyTo.email, "ada@example.com");
+  assert.match(requestBody.textContent, /A product launch site/);
+});
+
+test("escapes submitted project details in the notification email", async () => {
+  process.env.BREVO_API_KEY = "test-key";
+  let requestBody;
+  globalThis.fetch = async (_url, options) => {
+    requestBody = JSON.parse(options.body);
+    return { ok: true, status: 201, json: async () => ({}) };
+  };
+
+  const res = createResponse();
+  await handler(createRequest(validLead({ name: "Ada <script>alert(1)</script>" }), "192.0.2.16"), res);
+  assert.equal(res.statusCode, 200);
+  assert.doesNotMatch(requestBody.htmlContent, /<script>/);
+  assert.match(requestBody.htmlContent, /&lt;script&gt;/);
+});
+
+test("reports notification delivery failure instead of confirming receipt", async () => {
+  process.env.BREVO_API_KEY = "test-key";
+  globalThis.fetch = async () => ({ ok: false, status: 500, json: async () => ({}) });
+
+  const res = createResponse();
+  await handler(createRequest(validLead({ consent: false }), "192.0.2.17"), res);
+  assert.equal(res.statusCode, 502);
+  assert.deepEqual(res.body, { error: "Unable to process submission" });
 });
 
 test("rejects malformed email and oversized fields", async (context) => {
@@ -89,10 +127,15 @@ test("submits validated contact attributes through Brevo DOI", async () => {
   process.env.BREVO_LIST_ID = "17";
   process.env.SITE_ORIGIN = "https://impcoagency.agency";
   let requestBody;
+  let notificationBody;
   globalThis.fetch = async (url, options) => {
-    assert.equal(url, "https://api.brevo.com/v3/contacts/doubleOptinConfirmation");
     assert.equal(options.headers["api-key"], "test-key");
-    requestBody = JSON.parse(options.body);
+    if (url === "https://api.brevo.com/v3/smtp/email") {
+      notificationBody = JSON.parse(options.body);
+    } else {
+      assert.equal(url, "https://api.brevo.com/v3/contacts/doubleOptinConfirmation");
+      requestBody = JSON.parse(options.body);
+    }
     return { ok: true, status: 201, json: async () => ({}) };
   };
 
@@ -100,6 +143,8 @@ test("submits validated contact attributes through Brevo DOI", async () => {
   await handler(createRequest(validLead(), "192.0.2.14"), res);
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.body, { ok: true });
+  assert.equal(notificationBody.to[0].email, "contact@impcoagency.agency");
+  assert.equal(notificationBody.replyTo.email, "ada@example.com");
   assert.equal(requestBody.email, "ada@example.com");
   assert.deepEqual(requestBody.includeListIds, [17]);
   assert.equal(requestBody.templateId, 42);
